@@ -51,8 +51,10 @@ Const 返済元金列 As Long = 4    ' D列
 
 ' 計算書の作成パス取得関数
 ' C列7行目から計算書の作成パスを取得し、空白の場合はエラーを発生させる
+' パスが存在するフォルダでない場合もエラーを発生させる
 Public Function 計算書の作成パス取得(targetSheet As Worksheet) As String
     Dim pathValue As Variant
+    Dim pathString As String
     
     ' C列7行目の値を取得
     pathValue = targetSheet.Cells(計算書作成パス行, 計算書作成パス列).Value
@@ -62,9 +64,107 @@ Public Function 計算書の作成パス取得(targetSheet As Worksheet) As String
         Err.Raise 13, "計算書の作成パス取得", "C列7行目（計算書の作成パス）が空白です。"
     End If
     
+    ' 文字列として変換
+    pathString = CStr(pathValue)
+    
+    ' パスの妥当性チェック（フォルダが存在するかチェック）
+    If Dir(pathString, vbDirectory) = "" Then
+        Err.Raise 76, "計算書の作成パス取得", "指定されたパス '" & pathString & "' はフォルダではありません。"
+    End If
+    
     ' 文字列として返す
-    計算書の作成パス取得 = CStr(pathValue)
+    計算書の作成パス取得 = pathString
 End Function
+
+' ファイル出力関数
+' 計算書の作成パス取得で取得したフォルダに利息計算書ファイルを作成し、正常分出力データを貼り付ける
+Public Sub ファイル出力(targetSheet As Worksheet)
+    Dim 出力フォルダパス As String
+    Dim 出力データ As Variant
+    Dim 新しいワークブック As Workbook
+    Dim 新しいワークシート As Worksheet
+    Dim ファイル名 As String
+    Dim 完全ファイルパス As String
+    Dim 現在日時 As Date
+    Dim 年月日文字列 As String
+    Dim 時分秒文字列 As String
+    
+    On Error GoTo ErrorHandler
+    
+    ' 1. 計算書の作成パス取得
+    出力フォルダパス = 計算書の作成パス取得(targetSheet)
+    
+    ' 2. 正常分出力データ作成
+    出力データ = 正常分出力データ作成(targetSheet)
+    
+    ' 3. 現在日時を取得してファイル名を作成
+    現在日時 = Now
+    年月日文字列 = Format(現在日時, "yyyymmdd")
+    時分秒文字列 = Format(現在日時, "hhmmss")
+    ファイル名 = "利息計算書" & 年月日文字列 & "_" & 時分秒文字列 & ".xlsx"
+    
+    ' 4. 完全ファイルパスを作成
+    If Right(出力フォルダパス, 1) <> "\" Then
+        完全ファイルパス = 出力フォルダパス & "\" & ファイル名
+    Else
+        完全ファイルパス = 出力フォルダパス & ファイル名
+    End If
+    
+    ' 5. 新しいワークブックを作成
+    Set 新しいワークブック = Workbooks.Add
+    Set 新しいワークシート = 新しいワークブック.Worksheets(1)
+    
+    ' 6. データをA9セルから貼り付け
+    If IsArray(出力データ) Then
+        Dim 行数 As Long
+        Dim 列数 As Long
+        行数 = UBound(出力データ, 1)
+        列数 = UBound(出力データ, 2)
+        
+        ' A9セルから貼り付け
+        新しいワークシート.Range("A9").Resize(行数, 列数).Value = 出力データ
+    End If
+    
+    ' 7. ファイル保存
+    新しいワークブック.SaveAs Filename:=完全ファイルパス, FileFormat:=xlOpenXMLWorkbook
+    
+    ' 8. ワークブックを閉じる
+    新しいワークブック.Close SaveChanges:=False
+    
+    ' 9. 完了メッセージ
+    MsgBox "利息計算書ファイルの出力が完了しました。" & vbCrLf & "保存先: " & 完全ファイルパス, vbInformation, "ファイル出力完了"
+    
+    Exit Sub
+    
+ErrorHandler:
+    ' エラーが発生した場合はワークブックを閉じる
+    If Not 新しいワークブック Is Nothing Then
+        新しいワークブック.Close SaveChanges:=False
+    End If
+    
+    ' エラーメッセージを表示
+    MsgBox "ファイル出力中にエラーが発生しました: " & Err.Description, vbCritical, "エラー"
+    Err.Raise Err.Number, "ファイル出力", Err.Description
+End Sub
+
+' 計算書作成メイン処理
+' ツールシートを対象としてファイル出力を実行する
+Public Sub 計算書作成()
+    Dim ツールシート As Worksheet
+    
+    On Error GoTo ErrorHandler
+    
+    ' ツールシートを取得
+    Set ツールシート = ThisWorkbook.Worksheets("ツール")
+    
+    ' ファイル出力を実行
+    Call ファイル出力(ツールシート)
+    
+    Exit Sub
+    
+ErrorHandler:
+    MsgBox "計算書作成中にエラーが発生しました: " & Err.Description, vbCritical, "エラー"
+End Sub
 
 ' 返済予定情報取得関数
 ' 35行目から開始し、C列が空白になるまで返済予定日、返済元金、返済元金累計を取得
