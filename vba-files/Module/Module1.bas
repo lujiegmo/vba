@@ -1,4 +1,3 @@
-Attribute VB_Name = "Module1"
 Option Explicit
 
 ' 定数定義
@@ -28,6 +27,9 @@ Private Const 遅延損害金利率開始行 As Long = 15  ' 15行目
 ' 計算書作成パス関連定数
 Private Const 計算書作成パス列 As Long = 3  ' C列：計算書作成パス
 Private Const 計算書作成パス行 As Long = 7  ' 7行目
+
+' 出力関連定数
+Private Const 出力開始行オフセット As Long = 8  ' A9セルから貼り付けるためのオフセット
 
 ' 出力項目列定数（A列～M列）
 Private Const 出力_通番列 As Long = 1          ' A列：通番
@@ -78,7 +80,7 @@ End Function
 
 ' ファイル出力関数
 ' 計算書の作成パス取得で取得したフォルダに利息計算書ファイルを作成し、正常分出力データを貼り付ける
-Public Sub ファイル出力(targetSheet As Worksheet)
+Public Sub ファイル出力(targetSheet As Worksheet, templateSheet As Worksheet)
     Dim 出力フォルダパス As String
     Dim 出力データ As Variant
     Dim 新しいワークブック As Workbook
@@ -112,26 +114,47 @@ Public Sub ファイル出力(targetSheet As Worksheet)
     
     ' 5. 新しいワークブックを作成
     Set 新しいワークブック = Workbooks.Add
-    Set 新しいワークシート = 新しいワークブック.Worksheets(1)
     
-    ' 6. データをA9セルから貼り付け
+    ' 6. テンプレートシートを新しいワークブックにコピー
+    templateSheet.Copy Before:=新しいワークブック.Worksheets(1)
+    Set 新しいワークシート = 新しいワークブック.Worksheets(1)
+    新しいワークシート.Name = "利息計算書"
+    
+    ' 元のSheet1を削除
+    Application.DisplayAlerts = False
+    新しいワークブック.Worksheets("Sheet1").Delete
+    Application.DisplayAlerts = True
+    
+    ' 7. データをA9セルから貼り付け
     If IsArray(出力データ) Then
         Dim 行数 As Long
         Dim 列数 As Long
         行数 = UBound(出力データ, 1)
         列数 = UBound(出力データ, 2)
         
-        ' A9セルから貼り付け
-        新しいワークシート.Range("A9").Resize(行数, 列数).Value = 出力データ
+        ' メモリ効率を考慮してセル範囲を指定して貼り付け
+        Dim 貼り付け範囲 As Range
+        Set 貼り付け範囲 = 新しいワークシート.Range("A9").Resize(行数, 列数)
+        
+        ' 画面更新を停止してパフォーマンスを向上
+        Application.ScreenUpdating = False
+        Application.Calculation = xlCalculationManual
+        
+        ' データを貼り付け
+        貼り付け範囲.Value = 出力データ
+        
+        ' 画面更新を再開
+        Application.Calculation = xlCalculationAutomatic
+        Application.ScreenUpdating = True
     End If
     
-    ' 7. ファイル保存
+    ' 8. ファイル保存
     新しいワークブック.SaveAs Filename:=完全ファイルパス, FileFormat:=xlOpenXMLWorkbook
     
-    ' 8. ワークブックを閉じる
+    ' 9. ワークブックを閉じる
     新しいワークブック.Close SaveChanges:=False
     
-    ' 9. 完了メッセージ
+    ' 10. 完了メッセージ
     MsgBox "利息計算書ファイルの出力が完了しました。" & vbCrLf & "保存先: " & 完全ファイルパス, vbInformation, "ファイル出力完了"
     
     Exit Sub
@@ -151,19 +174,23 @@ End Sub
 ' ツールシートを対象としてファイル出力を実行する
 Public Sub 計算書作成()
     Dim ツールシート As Worksheet
+    Dim テンプレートシート As Worksheet
     
     On Error GoTo ErrorHandler
     
     ' ツールシートを取得
     Set ツールシート = ThisWorkbook.Worksheets("ツール")
     
+    ' テンプレートシートを取得
+    Set テンプレートシート = ThisWorkbook.Worksheets("テンプレート")
+    
     ' ファイル出力を実行
-    Call ファイル出力(ツールシート)
+    Call ファイル出力(ツールシート, テンプレートシート)
     
     Exit Sub
     
 ErrorHandler:
-    MsgBox "計算書作成中にエラーが発生しました: " & Err.Description, vbCritical, "エラー"
+    'MsgBox "計算書作成中にエラーが発生しました: " & Err.Description, vbCritical, "エラー"
 End Sub
 
 ' 返済予定情報取得関数
@@ -294,17 +321,23 @@ Public Function 正常分出力データ作成(targetSheet As Worksheet) As Variant
         期間終了日 = DateSerial(Year(返済予定当月データ(0)), Month(返済予定当月データ(0)), 1)
         期間終了日 = DateAdd("d", -1, 期間終了日)
         
+        ' 期失日以降であれば、期失日の前日に設定
+        Dim 期失日 As Date
+        期失日 = 期失日取得(targetSheet)
+        If 期間終了日 >= 期失日 Then
+            期間終了日 = DateAdd("d", -1, 期失日)
+        End If
+        
         ' 分割日リストの初期化
         ReDim 分割日リスト(1 To 100)
         分割日数 = 0
         
-        ' 6. 未返済年月1の前月が期間内にあるかチェック
-        Dim 未返済年月1前月 As Date
-        未返済年月1前月 = DateSerial(Year(返済予定前月データ(0)), Month(返済予定前月データ(0)), 1)
-        未返済年月1前月 = DateAdd("m", -1, 未返済年月1前月)
-        If 未返済年月1前月 >= 期間開始日 And 未返済年月1前月 <= 期間終了日 Then
+        ' 6. 返済予定前月データの日付が期間内にあるかチェック
+        Dim 返済予定前月日付 As Date
+        返済予定前月日付 = 返済予定前月データ(0)
+        If 返済予定前月日付 >= 期間開始日 And 返済予定前月日付 <= 期間終了日 Then
             分割日数 = 分割日数 + 1
-            分割日リスト(分割日数) = 未返済年月1前月
+            分割日リスト(分割日数) = 返済予定前月日付
         End If
         
         ' 7. 入出金情報の日付が期間内にあるかチェック
@@ -426,49 +459,129 @@ Public Function 正常分出力データ作成(targetSheet As Worksheet) As Variant
             Dim 残高 As Double
             Dim 延滞中約定返済元金 As Double
             
-            ' 入出金データから残高と延滞中約定返済元金を取得
+            ' 入出金データから計算期間開始日より小さい日付の中で最大日付のデータを取得
             残高 = 0
             延滞中約定返済元金 = 0
             If IsArray(入出金データ) And UBound(入出金データ, 1) > 0 Then
-                残高 = 入出金データ(UBound(入出金データ, 1), 4) ' 最後の残高
-                延滞中約定返済元金 = 入出金データ(UBound(入出金データ, 1), 5) ' 最後の延滞中約定返済元金
+                Dim 計算期間開始日_対象元金 As Date
+                計算期間開始日_対象元金 = 出力結果(出力行数, 出力_計算期間開始日列)
+                
+                Dim 最大日付_入出金 As Date
+                Dim 最大日付見つかった As Boolean
+                最大日付_入出金 = DateSerial(1900, 1, 1)
+                最大日付見つかった = False
+                
+                ' 計算期間開始日より小さい日付の中で最大日付を探す
+                For k = 1 To UBound(入出金データ, 1)
+                    If 入出金データ(k, 1) < 計算期間開始日_対象元金 And 入出金データ(k, 1) > 最大日付_入出金 Then
+                        最大日付_入出金 = 入出金データ(k, 1)
+                        残高 = 入出金データ(k, 4)
+                        延滞中約定返済元金 = 入出金データ(k, 5)
+                        最大日付見つかった = True
+                    End If
+                Next k
+                
+                ' 該当するデータが見つからない場合は最初のデータを使用
+                If Not 最大日付見つかった And UBound(入出金データ, 1) > 0 Then
+                    残高 = 入出金データ(1, 4)
+                    延滞中約定返済元金 = 入出金データ(1, 5)
+                End If
             End If
             
             対象元金 = 残高 - 延滞中約定返済元金
             
-            ' 計算期間開始日が返済予定前月データの日付と同じかより大きい場合
-            If 出力結果(出力行数, 出力_計算期間開始日列) >= 返済予定前月データ(0) Then
-                対象元金 = 対象元金 - 返済予定前月データ(2) ' 返済元金累計を減らす
+            ' 返済予定情報から計算期間開始日と同じかより小さい日付の中で最大日付のデータの返済元金累計を減らす
+            If IsArray(返済予定データ) And UBound(返済予定データ, 1) > 0 Then
+                Dim 最大日付_返済予定 As Date
+                Dim 返済元金累計_減算 As Double
+                最大日付_返済予定 = DateSerial(1900, 1, 1)
+                返済元金累計_減算 = 0
+                
+                For k = 1 To UBound(返済予定データ, 1)
+                    If 返済予定データ(k, 1) <= 計算期間開始日_対象元金 And 返済予定データ(k, 1) > 最大日付_返済予定 Then
+                        最大日付_返済予定 = 返済予定データ(k, 1)
+                        返済元金累計_減算 = 返済予定データ(k, 3) ' 返済元金累計
+                    End If
+                Next k
+                
+                対象元金 = 対象元金 - 返済元金累計_減算
             End If
             
             出力結果(出力行数, 出力_対象元金列) = 対象元金
             
             ' 利率の取得
             Dim 利率 As Double
+            Dim 利率見つかった As Boolean
             利率 = 0
+            利率見つかった = False
+            
             If IsArray(借入利率データ) And UBound(借入利率データ, 1) > 0 Then
+                Dim 計算期間開始日 As Date
+                計算期間開始日 = 出力結果(出力行数, 出力_計算期間開始日列)
+                
+                ' まず計算期間開始日と同じ日付のデータを探す
                 For k = 1 To UBound(借入利率データ, 1)
-                    If 借入利率データ(k, 2) = 出力結果(出力行数, 出力_計算期間開始日列) Then
+                    If 借入利率データ(k, 2) = 計算期間開始日 Then
                         利率 = 借入利率データ(k, 1)
+                        利率見つかった = True
                         Exit For
                     End If
                 Next k
+                
+                ' 同じ日付のデータがない場合、計算期間開始日より小さい日付の中で最も大きい日付を探す
+                If Not 利率見つかった Then
+                    Dim 最大日付 As Date
+                    最大日付 = DateSerial(1900, 1, 1) ' 初期値として最小日付を設定
+                    
+                    For k = 1 To UBound(借入利率データ, 1)
+                        If 借入利率データ(k, 2) < 計算期間開始日 And 借入利率データ(k, 2) > 最大日付 Or (借入利率データ(k, 2) = 最大日付 And 最大日付 = DateSerial(1900, 1, 1)) Then
+                            最大日付 = 借入利率データ(k, 2)
+                            利率 = 借入利率データ(k, 1)
+                            利率見つかった = True
+                        End If
+                    Next k
+                End If
             End If
             出力結果(出力行数, 出力_利率列) = 利率
             
-            ' 積数、利息金額、遅延損害金は設定不可（Excel数式あり）
-            出力結果(出力行数, 出力_積数列) = ""
-            出力結果(出力行数, 出力_利息金額列) = ""
+            ' 積数の数式設定（対象元金×利率×計算日数）
+            出力結果(出力行数, 出力_積数列) = "=E" & (出力行数 + 出力開始行オフセット) & "*J" & (出力行数 + 出力開始行オフセット) & "*I" & (出力行数 + 出力開始行オフセット)
+            
+            ' 利息金額の数式設定
+            Dim 現在行番号 As Long
+            現在行番号 = 出力行数 + 出力開始行オフセット
+            
+            If j = 1 Then
+                ' J=1の場合：=ROUNDDOWN(K行番号/365,0)
+                出力結果(出力行数, 出力_利息金額列) = "=ROUNDDOWN(K" & 現在行番号 & "/365,0)"
+            Else
+                ' J=1以外の場合：=ROUNDDOWN((SUM(K(J=1時の行番号):K現在の行番号)/365,0)-SUM(L(J=1時の行番号):L現在の行番号)
+                Dim J1開始行番号 As Long
+                J1開始行番号 = (出力行数 - j + 1) + 出力開始行オフセット ' J=1時の行番号を計算
+                出力結果(出力行数, 出力_利息金額列) = "=ROUNDDOWN(SUM(K" & J1開始行番号 & ":K" & 現在行番号 & ")/365,0)-SUM(L" & J1開始行番号 & ":L" & (現在行番号 - 1) & ")"
+            End If
+            
+            ' 遅延損害金は設定不可（Excel数式あり）
             出力結果(出力行数, 出力_遅延損害金列) = ""
         Next j
     Next i
     
     ' 結果配列のサイズを調整
     If 出力行数 > 0 Then
-        ReDim Preserve 出力結果(1 To 出力行数, 1 To 13)
-        出力データ作成 = 出力結果
+        ' 新しい配列を作成して必要な部分をコピー
+        Dim 最終結果() As Variant
+        ReDim 最終結果(1 To 出力行数, 1 To 13)
+        
+        Dim copyRow As Long, copyCol As Long
+        For copyRow = 1 To 出力行数
+            For copyCol = 1 To 13
+                最終結果(copyRow, copyCol) = 出力結果(copyRow, copyCol)
+            Next copyCol
+        Next copyRow
+        
+        正常分出力データ作成 = 最終結果
     Else
-        出力データ作成 = Array()
+        正常分出力データ作成 = Array()
     End If
 End Function
 
@@ -495,6 +608,7 @@ Public Function 入出金情報取得(targetSheet As Worksheet) As Variant
     Dim dataArray() As Variant
     Dim rowCount As Long
     Dim i As Long
+    Dim 摘要値 As String
     
     startRow = 入出金開始行 ' 開始行
     currentRow = startRow
@@ -502,7 +616,7 @@ Public Function 入出金情報取得(targetSheet As Worksheet) As Variant
     
     ' データ行数をカウント（B列が空白になるまで、摘要が「返済分」で終わる行は除外）
     Do While targetSheet.Cells(currentRow, 入出金日列).Value <> ""
-        Dim 摘要値 As String
+        
         摘要値 = CStr(targetSheet.Cells(currentRow, 摘要列).Value)
         ' 摘要が「返済分」で終わらない場合のみカウント
         If Not (Len(摘要値) >= 3 And Right(摘要値, 3) = "返済分") Then
@@ -526,7 +640,7 @@ Public Function 入出金情報取得(targetSheet As Worksheet) As Variant
     currentRow = startRow
     
     Do While targetSheet.Cells(currentRow, 入出金日列).Value <> ""
-        Dim 摘要値 As String
+    
         摘要値 = CStr(targetSheet.Cells(currentRow, 摘要列).Value)
         
         ' 摘要が「返済分」で終わらない場合のみ処理
@@ -586,7 +700,7 @@ End Function
 
 ' 期失日を取得する関数
 ' 指定されたシートのC列25行目のセル値を返す
-Public Function 期失日(targetSheet As Worksheet) As Date
+Public Function 期失日取得(targetSheet As Worksheet) As Date
     Dim cellValue As Variant
     
     ' セル値を取得
@@ -598,7 +712,7 @@ Public Function 期失日(targetSheet As Worksheet) As Date
     End If
     
     ' 日付型に変換して返す
-    期失日 = CDate(cellValue)
+    期失日取得 = CDate(cellValue)
 End Function
 
 ' 借入利率取得関数
@@ -798,3 +912,7 @@ Public Function 計算期間最初日取得(targetSheet As Worksheet) As Date
         End If
     End If
 End Function
+
+
+
+
