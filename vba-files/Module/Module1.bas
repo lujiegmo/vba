@@ -98,16 +98,27 @@ Const 削除最後行目 As Long = 69
 Const データ貼り付け開始行 As Long = 出力開始行オフセット + 1
 
 ' 期失理由取得関数
-' E列25行目から期失理由を取得し、空白の場合はエラーを発生させる
+' E列25行目から期失理由を取得し、ローン口座ステータスに応じて処理を分岐
 Public Function 期失理由取得(targetSheet As Worksheet) As String
     Dim cellValue As Variant
+    Dim ローン口座ステータス As String
     
     ' E列25行目の値を取得
     cellValue = targetSheet.Cells(期失理由行, 期失理由列).Value
     
+    ' ローン口座ステータスを取得
+    ローン口座ステータス = ローン口座ステータス取得(targetSheet)
+    
     ' 空白チェック
     If cellValue = "" Or IsEmpty(cellValue) Then
-        Err.Raise 13, "期失理由取得", "期失理由が設定されていません。E25セルに期失理由を入力してください。"
+        ' ローン口座ステータスが「期失」の場合は入力必須
+        If ローン口座ステータス = "期失" Then
+            Err.Raise 13, "期失理由取得", "期失理由が設定されていません。E25セルに期失理由を入力してください。"
+        Else
+            ' それ以外の場合は「期限切れ」を設定
+            期失理由取得 = "期限切れ"
+            Exit Function
+        End If
     End If
     
     ' 文字列として変換
@@ -239,7 +250,9 @@ Public Sub ファイル出力(targetSheet As Worksheet, templateSheet As Worksheet)
     現在日時 = Now
     年月日文字列 = Format(現在日時, "yyyymmdd")
     時分秒文字列 = Format(現在日時, "hhmmss")
-    ファイル名 = "利息計算書" & 年月日文字列 & "_" & 時分秒文字列 & ".xlsx"
+    Dim 顧客番号 As String
+    顧客番号 = 顧客番号取得(targetSheet)
+    ファイル名 = "利息計算書" & 顧客番号 & ".xlsx"
     
     ' 4. 完全ファイルパスを作成
     If Right(出力フォルダパス, 1) <> "\" Then
@@ -296,8 +309,6 @@ Public Sub ファイル出力(targetSheet As Worksheet, templateSheet As Worksheet)
     End If
     
     ' 7.5. 顧客番号設定
-    Dim 顧客番号 As String
-    顧客番号 = 顧客番号取得(targetSheet)
     新しいワークシート.Cells(出力顧客番号行, 出力顧客番号列).Value = "顧客番号" & 顧客番号
     
     ' 7.6. 手続開始日設定
@@ -315,14 +326,36 @@ Public Sub ファイル出力(targetSheet As Worksheet, templateSheet As Worksheet)
     期失理由 = 期失理由取得(targetSheet)
     新しいワークシート.Cells(出力期失理由行, 出力期失理由列).Value = 期失理由
     
-    ' 8. ファイル保存
-    新しいワークブック.SaveAs Filename:=完全ファイルパス, FileFormat:=xlOpenXMLWorkbook
+    ' 8. ファイル保存（既存ファイルがある場合は連番付きで保存）
+    Dim 保存ファイルパス As String
+    Dim カウンタ As Long
+    保存ファイルパス = 完全ファイルパス
+    カウンタ = 1
+    
+    ' 既存ファイルがある場合は連番を付けて新しいファイル名を作成
+    Do While Dir(保存ファイルパス) <> ""
+        Dim ファイル名部分 As String
+        Dim 拡張子部分 As String
+        Dim フォルダパス部分 As String
+        
+        ' ファイルパスを分解
+        フォルダパス部分 = Left(完全ファイルパス, InStrRev(完全ファイルパス, "\"))
+        ファイル名部分 = Mid(完全ファイルパス, InStrRev(完全ファイルパス, "\") + 1)
+        拡張子部分 = Right(ファイル名部分, 5) ' ".xlsx"
+        ファイル名部分 = Left(ファイル名部分, Len(ファイル名部分) - 5)
+        
+        ' 連番付きファイル名を作成
+        保存ファイルパス = フォルダパス部分 & ファイル名部分 & "(" & カウンタ & ")" & 拡張子部分
+        カウンタ = カウンタ + 1
+    Loop
+    
+    新しいワークブック.SaveAs Filename:=保存ファイルパス, FileFormat:=xlOpenXMLWorkbook
     
     ' 9. ワークブックを閉じる
     新しいワークブック.Close SaveChanges:=False
     
     ' 10. 完了メッセージ
-    MsgBox "利息計算書ファイルの出力が完了しました。" & vbCrLf & "保存先: " & 完全ファイルパス, vbInformation, "ファイル出力完了"
+    MsgBox "利息計算書ファイルの出力が完了しました。" & vbCrLf & "保存先: " & 保存ファイルパス, vbInformation, "ファイル出力完了"
     
     Exit Sub
     
@@ -369,20 +402,16 @@ Public Function 返済予定情報取得(targetSheet As Worksheet) As Variant
     Dim i As Long
     Dim 返済元金累計 As Double
     
-    currentRow = 返済予定開始行
-    rowCount = 0
+    ' 35行目のC列が空白の場合も1行として処理
+    currentRow = 返済予定開始行 + 1
+    rowCount = 1
     
     ' データ行数をカウント（C列が空白になるまで）
     Do While targetSheet.Cells(currentRow, 返済予定日列).Value <> ""
         rowCount = rowCount + 1
         currentRow = currentRow + 1
     Loop
-    
-    ' 35行目のC列が空白の場合も1行として処理
-    If rowCount = 0 Then
-        rowCount = 1
-    End If
-    
+        
     ' 配列を初期化（行数 x 3列：返済予定日、返済元金、返済元金累計）
     ReDim dataArray(1 To rowCount, 1 To 3)
     
@@ -446,11 +475,11 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
     Dim 計算期間最初日 As Date
     Dim 出力結果() As Variant
     Dim 出力行数 As Long
-    Dim i As Long, j As Long
+    Dim i As Long, j As Long, k As Long
     
     ' 1. 返済予定情報取得
     返済予定データ = 返済予定情報取得(targetSheet)
-    入出金データ = 入出金情報取得(targetSheet)
+    入出金データ = 入出金情報全体取得(targetSheet)
     借入利率データ = 借入利率取得(targetSheet)
     遅延損害金利率データ = 遅延損害金利率取得(targetSheet)
     計算期間最初日 = 計算期間最初日取得(targetSheet)
@@ -524,7 +553,6 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
                     ' 既存の分割日と重複しないかチェック
                     Dim 重複フラグ As Boolean
                     重複フラグ = False
-                    Dim k As Long
                     For k = 1 To 分割日数
                         If 分割日リスト(k) = 入出金日 Then
                             重複フラグ = True
@@ -627,7 +655,7 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
             出力結果(出力行数, 出力_区切り列) = "～"
             
             ' 計算日数
-            出力結果(出力行数, 出力_計算日数列) = DateDiff("d", 出力結果(出力行数, 出力_計算期間開始日列), 出力結果(出力行数, 出力_計算期間終了日列)) + 1
+            出力結果(出力行数, 出力_計算日数列) = "=H" & (出力行数 + 出力開始行オフセット) & "-F" & (出力行数 + 出力開始行オフセット) & "+1"
             
             ' 対象元金の計算
             Dim 対象元金 As Double
@@ -738,6 +766,46 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
             
             ' 遅延損害金は空白
             出力結果(出力行数, 出力_遅延損害金列) = ""
+            
+            ' 借入・返済情報の設定
+            Dim 入出金情報全体データ_借入返済 As Variant
+            入出金情報全体データ_借入返済 = 入出金情報全体取得(targetSheet)
+            
+            If IsArray(入出金情報全体データ_借入返済) And UBound(入出金情報全体データ_借入返済, 1) > 0 Then
+                Dim 借入設定済み As Boolean
+                Dim 返済設定済み As Boolean
+                借入設定済み = False
+                返済設定済み = False
+                
+                For k = 1 To UBound(入出金情報全体データ_借入返済, 1)
+                    ' 計算期間開始日と一致する場合のみ処理
+                    If 入出金情報全体データ_借入返済(k, 1) = 出力結果(出力行数, 出力_計算期間開始日列) Then
+                        Dim 摘要 As String
+                        摘要 = CStr(入出金情報全体データ_借入返済(k, 2))
+                        
+                        ' 借入情報の設定
+                        If Not 借入設定済み And Len(摘要) >= 2 And Right(摘要, 2) = "借入" Then
+                            出力結果(出力行数, 出力_借入日列) = 入出金情報全体データ_借入返済(k, 1)
+                            出力結果(出力行数, 出力_借入額列) = 入出金情報全体データ_借入返済(k, 3)
+                            借入設定済み = True
+                        End If
+                        
+                        ' 返済情報の設定
+                        If Not 返済設定済み And Len(摘要) >= 3 And Right(摘要, 3) = "返済分" Then
+                            出力結果(出力行数, 出力_返済日列) = 入出金情報全体データ_借入返済(k, 1)
+                            出力結果(出力行数, 出力_元金_返済額列) = 入出金情報全体データ_借入返済(k, 3)
+                            返済設定済み = True
+                        End If
+                        
+                        ' 両方設定済みの場合はループを終了
+                        If 借入設定済み And 返済設定済み Then
+                            Exit For
+                        End If
+                    End If
+                Next k
+            End If
+
+            
         Next j
         
         ' 11. 延滞分レコードの値を設定する
@@ -752,7 +820,7 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
             出力結果(出力行数, 出力_通番列) = 出力行数
             
             ' ステータス
-            出力結果(出力行数, 出力_ステータス列) = "延滞"
+            出力結果(出力行数, 出力_ステータス列) = 期失理由取得(targetSheet)
             
             ' イベント
             出力結果(出力行数, 出力_イベント列) = "約定返済"
@@ -774,7 +842,7 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
             出力結果(出力行数, 出力_区切り列) = "～"
             
             ' 計算日数
-            出力結果(出力行数, 出力_計算日数列) = DateDiff("d", 出力結果(出力行数, 出力_計算期間開始日列), 出力結果(出力行数, 出力_計算期間終了日列)) + 1
+            出力結果(出力行数, 出力_計算日数列) = "=H" & (出力行数 + 出力開始行オフセット) & "-F" & (出力行数 + 出力開始行オフセット) & "+1"
             
             ' 対象元金
             出力結果(出力行数, 出力_対象元金列) = 返済予定当月データ(1) ' 返済元金
@@ -822,19 +890,59 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
             
             ' 遅延損害金の数式設定（積数/365）
             出力結果(出力行数, 出力_遅延損害金列) = "=ROUNDDOWN(K" & (出力行数 + 出力開始行オフセット) & "/365,0)"
+            
+            ' 借入・返済情報の設定
+            Dim 入出金情報全体データ_借入返済_延滞 As Variant
+            入出金情報全体データ_借入返済_延滞 = 入出金情報全体取得(targetSheet)
+            
+            If IsArray(入出金情報全体データ_借入返済_延滞) And UBound(入出金情報全体データ_借入返済_延滞, 1) > 0 Then
+                Dim k_延滞 As Long
+                Dim 借入設定済み_延滞 As Boolean
+                Dim 返済設定済み_延滞 As Boolean
+                借入設定済み_延滞 = False
+                返済設定済み_延滞 = False
+                
+                For k_延滞 = 1 To UBound(入出金情報全体データ_借入返済_延滞, 1)
+                    ' 計算期間開始日と一致する場合のみ処理
+                    If 入出金情報全体データ_借入返済_延滞(k_延滞, 1) = 出力結果(出力行数, 出力_計算期間開始日列) Then
+                        Dim 摘要_延滞 As String
+                        摘要_延滞 = CStr(入出金情報全体データ_借入返済_延滞(k_延滞, 2))
+                        
+                        ' 借入情報の設定
+                        If Not 借入設定済み_延滞 And Len(摘要_延滞) >= 2 And Right(摘要_延滞, 2) = "借入" Then
+                            出力結果(出力行数, 出力_借入日列) = 入出金情報全体データ_借入返済_延滞(k_延滞, 1)
+                            出力結果(出力行数, 出力_借入額列) = 入出金情報全体データ_借入返済_延滞(k_延滞, 3)
+                            借入設定済み_延滞 = True
+                        End If
+                        
+                        ' 返済情報の設定
+                        If Not 返済設定済み_延滞 And Len(摘要_延滞) >= 3 And Right(摘要_延滞, 3) = "返済分" Then
+                            出力結果(出力行数, 出力_返済日列) = 入出金情報全体データ_借入返済_延滞(k_延滞, 1)
+                            出力結果(出力行数, 出力_元金_返済額列) = 入出金情報全体データ_借入返済_延滞(k_延滞, 3)
+                            返済設定済み_延滞 = True
+                        End If
+                        
+                        ' 両方設定済みの場合はループを終了
+                        If 借入設定済み_延滞 And 返済設定済み_延滞 Then
+                            Exit For
+                        End If
+                    End If
+                Next k_延滞
+            End If
+            
         End If
         
-    Next I
+    Next i
 
     ' 12. 期失レコードの処理
     Dim 期失日_期失レコード As Date
-    Dim 今日 As Date
+    Dim 昨日 As Date
     Dim 手続開始日_期失レコード As Date
     Dim 入出金情報全体データ As Variant
     Dim 返済履歴データ As Variant
     
     期失日_期失レコード = 期失日取得(targetSheet)
-    今日 = Date
+    昨日 = Date - 1
     手続開始日_期失レコード = 手続開始日取得(targetSheet)
     入出金情報全体データ = 入出金情報全体取得(targetSheet)
     返済履歴データ = 返済履歴情報取得(targetSheet)
@@ -846,7 +954,7 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
     期失分割日数 = 0
     
     ' 手続開始日が期間内にあるかチェック
-    If 手続開始日_期失レコード >= 期失日_期失レコード And 手続開始日_期失レコード <= 今日 Then
+    If 手続開始日_期失レコード >= 期失日_期失レコード And 手続開始日_期失レコード <= 昨日 Then
         期失分割日数 = 期失分割日数 + 1
         期失分割日リスト(期失分割日数) = 手続開始日_期失レコード
     End If
@@ -856,7 +964,7 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
         For j = 1 To UBound(入出金情報全体データ, 1)
             Dim 入出金日_期失 As Date
             入出金日_期失 = 入出金情報全体データ(j, 1)
-            If 入出金日_期失 >= 期失日_期失レコード And 入出金日_期失 <= 今日 Then
+            If 入出金日_期失 >= 期失日_期失レコード And 入出金日_期失 <= 昨日 Then
                 ' 既存の分割日と重複しないかチェック
                 Dim 重複フラグ_期失 As Boolean
                 重複フラグ_期失 = False
@@ -879,7 +987,7 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
         For j = 1 To UBound(返済履歴データ, 1)
             Dim 返済履歴日_期失 As Date
             返済履歴日_期失 = 返済履歴データ(j, 1)
-            If 返済履歴日_期失 >= 期失日_期失レコード And 返済履歴日_期失 <= 今日 Then
+            If 返済履歴日_期失 >= 期失日_期失レコード And 返済履歴日_期失 <= 昨日 Then
                 ' 既存の分割日と重複しないかチェック
                 Dim 重複フラグ2_期失 As Boolean
                 重複フラグ2_期失 = False
@@ -925,7 +1033,7 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
         
         ' 計算期間終了日
         If j = 期失レコード数 Then
-            出力結果(出力行数, 出力_計算期間終了日列) = 今日
+            出力結果(出力行数, 出力_計算期間終了日列) = 昨日
         Else
             出力結果(出力行数, 出力_計算期間終了日列) = DateAdd("d", -1, 期失分割日リスト(j))
         End If
@@ -947,7 +1055,7 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
         End If
         
         ' 約定返済月
-        If 出力結果(出力行数, 出力_計算期間終了日列) = 今日 Then
+        If 出力結果(出力行数, 出力_計算期間終了日列) = 昨日 Then
             出力結果(出力行数, 出力_約定返済月列) = "計算中"
         Else
             出力結果(出力行数, 出力_約定返済月列) = "ー"
@@ -986,7 +1094,7 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
         出力結果(出力行数, 出力_対象元金列) = 対象元金_期失
         
         ' 計算日数
-        出力結果(出力行数, 出力_計算日数列) = DateDiff("d", 出力結果(出力行数, 出力_計算期間開始日列), 出力結果(出力行数, 出力_計算期間終了日列)) + 1
+        出力結果(出力行数, 出力_計算日数列) = "=H" & (出力行数 + 出力開始行オフセット) & "-F" & (出力行数 + 出力開始行オフセット) & "+1"
         
         ' 区切り
         出力結果(出力行数, 出力_区切り列) = "～"
@@ -1110,8 +1218,8 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
     ' 期失レコードの「計」行を追加
     出力行数 = 出力行数 + 1
     
-    ' 通番
-    出力結果(出力行数, 出力_通番列) = 出力行数
+    ' 通番（設定しない）
+    ' 出力結果(出力行数, 出力_通番列) = 出力行数
     
     ' 約定返済月
     出力結果(出力行数, 出力_約定返済月列) = "計"
@@ -1124,8 +1232,8 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
     ' 利息金額の数式設定（レコード全体の利息金額の合計-レコード全体の利息_返済額の合計）
     出力結果(出力行数, 出力_利息金額列) = "=SUM(L" & (1 + 出力開始行オフセット) & ":L" & (出力行数 + 出力開始行オフセット - 1) & ")-SUM(R" & (1 + 出力開始行オフセット) & ":R" & (出力行数 + 出力開始行オフセット - 1) & ")"
     
-    ' 遅延損害金の数式設定（期失の遅延損害金の合計-レコード全体の遅損金_返済額の合計）
-    出力結果(出力行数, 出力_遅延損害金列) = "=SUM(M" & (J1時の行番号_期失 + 出力開始行オフセット) & ":M" & (出力行数 + 出力開始行オフセット - 1) & ")-SUM(S" & (1 + 出力開始行オフセット) & ":S" & (出力行数 + 出力開始行オフセット - 1) & ")"
+    ' 遅延損害金の数式設定（レコード全体の遅延損害金の合計-レコード全体の遅損金_返済額の合計）
+    出力結果(出力行数, 出力_遅延損害金列) = "=SUM(M" & (1 + 出力開始行オフセット) & ":M" & (出力行数 + 出力開始行オフセット - 1) & ")-SUM(S" & (1 + 出力開始行オフセット) & ":S" & (出力行数 + 出力開始行オフセット - 1) & ")"
     
     ' 結果配列のサイズを調整
     If 出力行数 > 0 Then
@@ -1162,102 +1270,7 @@ Private Sub 分割日ソート(分割日リスト() As Date, 分割日数 As Long)
     Next i
 End Sub
 
-' 入出金情報取得関数
-Public Function 入出金情報取得(targetSheet As Worksheet) As Variant
-    Dim startRow As Long
-    Dim currentRow As Long
-    Dim dataArray() As Variant
-    Dim rowCount As Long
-    Dim i As Long
-    Dim 摘要値 As String
-    
-    startRow = 入出金開始行 ' 開始行
-    currentRow = startRow
-    rowCount = 0
-    
-    ' データ行数をカウント（B列が空白になるまで、摘要が「返済分」で終わる行は除外）
-    Do While targetSheet.Cells(currentRow, 入出金日列).Value <> ""
-        
-        摘要値 = CStr(targetSheet.Cells(currentRow, 摘要列).Value)
-        ' 摘要が「返済分」で終わらない場合のみカウント
-        If Not (Len(摘要値) >= 3 And Right(摘要値, 3) = "返済分") Then
-            rowCount = rowCount + 1
-        End If
-        currentRow = currentRow + 1
-    Loop
-    
-    ' データが存在しない場合は空の配列を返す
-    If rowCount = 0 Then
-        入出金情報取得 = Array()
-        Exit Function
-    End If
-    
-    ' 配列を初期化（行数 x 5列）
-    ReDim dataArray(1 To rowCount, 1 To 5)
-    
-    ' データを取得してバリデーション
-    Dim arrayIndex As Long
-    arrayIndex = 1
-    currentRow = startRow
-    
-    Do While targetSheet.Cells(currentRow, 入出金日列).Value <> ""
-    
-        摘要値 = CStr(targetSheet.Cells(currentRow, 摘要列).Value)
-        
-        ' 摘要が「返済分」で終わらない場合のみ処理
-        If Not (Len(摘要値) >= 3 And Right(摘要値, 3) = "返済分") Then
-            ' B列：入出金日（日付チェック）
-            Dim dateValue As Variant
-            dateValue = targetSheet.Cells(currentRow, 入出金日列).Value
-            If Not IsDate(dateValue) Then
-                Err.Raise 13, "入出金情報取得", currentRow & "行目のB列（入出金日）が日付ではありません。"
-            End If
-            dataArray(arrayIndex, 1) = CDate(dateValue)
-            
-            ' C列：摘要（文字列、チェック不要）
-            dataArray(arrayIndex, 2) = 摘要値
-            
-            ' D列：入出金金額（数値チェック）
-            Dim amountValue As Variant
-            amountValue = targetSheet.Cells(currentRow, 入出金金額列).Value
-            If Not IsNumeric(amountValue) Then
-                Err.Raise 13, "入出金情報取得", currentRow & "行目のD列（入出金金額）が数値ではありません。"
-            End If
-            dataArray(arrayIndex, 3) = CDbl(amountValue)
-            
-            ' E列：残高（数値チェック）
-            Dim balanceValue As Variant
-            balanceValue = targetSheet.Cells(currentRow, 残高列).Value
-            If Not IsNumeric(balanceValue) Then
-                Err.Raise 13, "入出金情報取得", currentRow & "行目のE列（残高）が数値ではありません。"
-            End If
-            dataArray(arrayIndex, 4) = CDbl(balanceValue)
-            
-            ' F列：延滞中の約定返済元金合計（入力があれば数値チェック）
-            Dim principalValue As Variant
-            principalValue = targetSheet.Cells(currentRow, 約定返済元金列).Value
-            If principalValue <> "" Then
-                If Not IsNumeric(principalValue) Then
-                    Err.Raise 13, "入出金情報取得", currentRow & "行目のF列（延滞中の約定返済元金合計）が数値ではありません。"
-                End If
-                dataArray(arrayIndex, 5) = CDbl(principalValue)
-            Else
-                ' 空白の場合は前の行の値を使用、ただしarrayIndex=1の場合は0を設定
-                If arrayIndex = 1 Then
-                    dataArray(arrayIndex, 5) = 0
-                Else
-                    dataArray(arrayIndex, 5) = dataArray(arrayIndex - 1, 5)
-                End If
-            End If
-            
-            arrayIndex = arrayIndex + 1
-        End If
-        
-        currentRow = currentRow + 1
-    Loop
-    
-    入出金情報取得 = dataArray
-End Function
+
 
 ' 入出金情報全体取得関数（返済分も含む）
 ' 指定されたシートの入出金開始行から全ての入出金情報を取得（返済分の除外なし）
@@ -1559,7 +1572,7 @@ Public Function 計算期間最初日取得(targetSheet As Worksheet) As Date
     最初日 = DateAdd("m", -1, 最初日)
     
     ' 入出金情報を取得
-    入出金データ = 入出金情報取得(targetSheet)
+    入出金データ = 入出金情報全体取得(targetSheet)
     
     ' 入出金データが存在するかチェック
     入出金データ存在 = IsArray(入出金データ) And UBound(入出金データ, 1) > 0
@@ -1609,6 +1622,7 @@ Public Function 計算期間最初日取得(targetSheet As Worksheet) As Date
         End If
     End If
 End Function
+
 
 
 
