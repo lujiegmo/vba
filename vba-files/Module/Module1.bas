@@ -1116,6 +1116,29 @@ Public Function 出力データ作成(targetSheet As Worksheet) As Variant
         Next j
     End If
     
+    ' 遅延損害金利率データの開始日が期間内にあるかチェック
+    If IsArray(遅延損害金利率データ) And UBound(遅延損害金利率データ, 1) > 0 Then
+        For j = 1 To UBound(遅延損害金利率データ, 1)
+            Dim 遅延損害金利率開始日_期失 As Date
+            遅延損害金利率開始日_期失 = 遅延損害金利率データ(j, 2)
+            If 遅延損害金利率開始日_期失 >= 期失日_期失レコード And 遅延損害金利率開始日_期失 <= 昨日 Then
+                ' 既存の分割日と重複しないかチェック
+                Dim 重複フラグ3_期失 As Boolean
+                重複フラグ3_期失 = False
+                For k = 1 To 期失分割日数
+                    If 期失分割日リスト(k) = 遅延損害金利率開始日_期失 Then
+                        重複フラグ3_期失 = True
+                        Exit For
+                    End If
+                Next k
+                If Not 重複フラグ3_期失 Then
+                    期失分割日数 = 期失分割日数 + 1
+                    期失分割日リスト(期失分割日数) = 遅延損害金利率開始日_期失
+                End If
+            End If
+        Next j
+    End If
+    
     ' 分割日をソート
     If 期失分割日数 > 1 Then
         Call 分割日ソート(期失分割日リスト, 期失分割日数)
