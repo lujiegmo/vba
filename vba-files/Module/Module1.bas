@@ -1,144 +1,5 @@
 Option Explicit
 
-' 定数定義
-
-' 入出金情報関連定数
-Public Const 入出金開始行 As Long = 51 ' 入出金データ開始行
-Public Const 入出金日列 As Long = 2     ' B列：入出金日
-Public Const 摘要列 As Long = 3         ' C列：摘要
-Public Const 入出金金額列 As Long = 4   ' D列：入出金金額
-Public Const 残高列 As Long = 5         ' E列：残高
-Public Const 約定返済元金列 As Long = 6 ' F列：延滞中の約定返済元金合計
-Public Const 入出金情報最大行数 As Long = 20  ' 入出金情報の最大設定可能行数
-
-' 期失日関連定数
-Public Const 期失日列 As Long = 3  ' C列
-Public Const 期失日行 As Long = 30  ' 30行目
-
-' 借入利率関連定数
-Public Const 借入利率列 As Long = 2  ' B列：借入利率
-Public Const 借入利率開始日列 As Long = 3  ' C列：開始日
-Public Const 借入利率開始行 As Long = 34  ' 24行目
-Public Const 借入利率最大行数 As Long = 2  ' 借入利率の最大設定可能行数
-
-' 遅延損害金利率関連定数
-Public Const 遅延損害金利率列 As Long = 2  ' B列：遅延損害金利率
-Public Const 遅延損害金利率開始日列 As Long = 3  ' C列：開始日
-Public Const 遅延損害金利率開始行 As Long = 15  ' 15行目
-Public Const 遅延損害金利率最大行数 As Long = 3  ' 最大3行まで設定可能
-
-' 計算書作成パス関連定数
-Public Const 計算書作成パス列 As Long = 3  ' C列：計算書作成パス
-Public Const 計算書作成パス行 As Long = 7  ' 7行目
-
-' 顧客番号関連定数
-Public Const 顧客番号列 As Long = 3  ' C列：顧客番号
-Public Const 顧客番号行 As Long = 6  ' 6行目
-
-' 手続理由関連定数
-Public Const 手続理由列 As Long = 3  ' C列：手続理由
-Public Const 手続理由行 As Long = 10  ' 10行目
-
-' 手続開始日関連定数
-Public Const 手続開始日列 As Long = 3  ' C列：手続開始日
-Public Const 手続開始日行 As Long = 11  ' 11行目
-
-' ローン口座ステータス関連定数
-Public Const ローン口座ステータス列 As Long = 3  ' C列：ローン口座ステータス
-Public Const ローン口座ステータス行 As Long = 27  ' 27行目
-
-' 期失理由関連定数
-Public Const 期失理由列 As Long = 5  ' E列：期失理由
-Public Const 期失理由行 As Long = 30  ' 30行目
-
-' 初回借入日関連定数
-Public Const 初回借入日列 As Long = 3  ' C列：初回借入日
-Public Const 初回借入日行 As Long = 22  ' 22行目
-
-' 契約期限日関連定数
-Public Const 契約期限日列 As Long = 3  ' C列：契約期限日
-Public Const 契約期限日行 As Long = 23  ' 23行目
-
-' 借入限度額関連定数
-Public Const 借入限度額列 As Long = 3  ' C列：借入限度額
-Public Const 借入限度額行 As Long = 24  ' 24行目
-
-' 摘要文字列関連定数
-Public Const 借入摘要借入文字列 As String = "借入"     ' 借入を示す摘要文字列
-Public Const 借入摘要借換文字列 As String = "借換"     ' 借換を示す摘要文字列
-Public Const 返済摘要返済分文字列 As String = "返済分"   ' 返済を示す摘要文字列
-
-' ローン口座ステータス関連定数
-Public Const 期失ステータス文字列 As String = "期失"  ' 期失を示すステータス文字列
-Public Const 期限切れ理由文字列 As String = "期限切れ"  ' 期限切れを示す理由文字列
-Public Const 正常ステータス文字列 As String = "正常"  ' 正常を示すステータス文字列
-Public Const 約定返済イベント文字列 As String = "約定返済"  ' 約定返済を示すイベント文字列
-Public Const 期失劣後ステータス文字列 As String = "期失（劣後）"  ' 期失（劣後）を示すステータス文字列
-Public Const 延滞イベント文字列 As String = "延滞"  ' 延滞を示すイベント文字列
-Public Const 内入イベント文字列 As String = "内入"  ' 内入を示すイベント文字列
-Public Const 破産イベント文字列 As String = "破産"  ' 破産イベント文字列
-Public Const 利息摘要文字列 As String = "利息"  ' 利息を示す摘要文字列
-Public Const 遅延損害金摘要文字列 As String = "遅延損害金"  ' 遅延損害金を示す摘要文字列
-
-' 日付関連定数
-Public Const 日付初期値 As Date = #1/1/1900#  ' 空白日付の初期値
-
-' ワークシート名関連定数
-Public Const ツールシート名 As String = "ツール"  ' ツールシートの名前
-Public Const テンプレートシート名 As String = "テンプレート_EXCEL"  ' テンプレートシートの名前
-Public Const テンプレートワードシート名 As String = "テンプレート_WORD"  ' テンプレートWORDシートの名前
-
-' 出力関連定数
-Public Const 出力タイトル行 As Long = 7  ' 出力タイトル行
-Public Const 出力開始行オフセット As Long = 8  ' A9セルから貼り付けるためのオフセット
-Public Const 出力顧客番号行 As Long = 4  ' B4行：顧客番号
-Public Const 出力顧客番号列 As Long = 2  ' B列：顧客番号
-Public Const 出力手続開始日行 As Long = 2  ' J2行：手続開始日
-Public Const 出力手続開始日列 As Long = 10  ' J列：手続開始日
-Public Const 出力期失日行 As Long = 3  ' J3行：期失日
-Public Const 出力期失日列 As Long = 10  ' J列：期失日
-Public Const 出力期失理由行 As Long = 3  ' K3行：期失理由
-Public Const 出力期失理由列 As Long = 11  ' K列：期失理由
-
-' 出力項目列定数（A列～S列）
-Public Const 出力_通番列 As Long = 1          ' A列：通番
-Public Const 出力_ステータス列 As Long = 2      ' B列：ステータス
-Public Const 出力_イベント列 As Long = 3        ' C列：イベント
-Public Const 出力_約定返済月列 As Long = 4      ' D列：約定返済月
-Public Const 出力_対象元金列 As Long = 5        ' E列：対象元金
-Public Const 出力_計算期間開始日列 As Long = 6  ' F列：計算期間開始日
-Public Const 出力_区切り列 As Long = 7          ' G列："～"
-Public Const 出力_計算期間終了日列 As Long = 8  ' H列：計算期間終了日
-Public Const 出力_計算日数列 As Long = 9        ' I列：計算日数
-Public Const 出力_利率列 As Long = 10           ' J列：利率
-Public Const 出力_積数列 As Long = 11           ' K列：積数
-Public Const 出力_利息金額列 As Long = 12       ' L列：利息金額
-Public Const 出力_遅延損害金列 As Long = 13     ' M列：遅延損害金
-Public Const 出力_借入日列 As Long = 14         ' N列：借入日
-Public Const 出力_借入額列 As Long = 15         ' O列：借入額
-Public Const 出力_返済日列 As Long = 16         ' P列：返済日
-Public Const 出力_元金_返済額列 As Long = 17    ' Q列：元金_返済額
-Public Const 出力_利息_返済額列 As Long = 18    ' R列：利息_返済額
-Public Const 出力_遅損金_返済額列 As Long = 19  ' S列：遅損金_返済額
-
-' 返済予定情報の定数
-Public Const 返済予定開始行 As Long = 40  ' 40行目
-Public Const 返済予定日列 As Long = 3  ' C列
-Public Const 返済元金列 As Long = 4    ' D列
-
-' 返済履歴情報の定数
-Public Const 返済履歴開始行 As Long = 75   ' 75行目
-Public Const 返済履歴日付列 As Long = 2    ' B列：日付
-Public Const 返済履歴摘要列 As Long = 3    ' C列：摘要
-Public Const 返済履歴出金金額列 As Long = 4 ' D列：出金金額
-Public Const 返済履歴情報最大行数 As Long = 20  ' 返済履歴情報の最大設定可能行数
-
-' 削除最後行目の定数
-Public Const 削除最後行目 As Long = 69
-
-' データ貼り付け開始行の定数
-Public Const データ貼り付け開始行 As Long = 出力開始行オフセット + 1
-
 ' 期失理由取得関数
 ' E列25行目から期失理由を取得し、ローン口座ステータスに応じて処理を分岐
 Public Function 期失理由取得(toolSheet As Worksheet) As String
@@ -391,13 +252,17 @@ Public Sub ファイル出力(toolSheet As Worksheet, templateSheet As Worksheet)
     カウンタ = 1
 
     ' 既存ファイルがある場合は連番を付けて新しいファイル名を作成
-    Do While Dir(保存ファイルパス) <> ""
+    Dim fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    Dim フォルダパス部分 As String
+    フォルダパス部分 = Left(完全ファイルパス, InStrRev(完全ファイルパス, "\"))
+
+    Do While fso.FileExists(保存ファイルパス)
         Dim ファイル名部分 As String
         Dim 拡張子部分 As String
-        Dim フォルダパス部分 As String
 
         ' ファイルパスを分解
-        フォルダパス部分 = Left(完全ファイルパス, InStrRev(完全ファイルパス, "\"))
         ファイル名部分 = Mid(完全ファイルパス, InStrRev(完全ファイルパス, "\") + 1)
         拡張子部分 = Right(ファイル名部分, 5) ' ".xlsx"
         ファイル名部分 = Left(ファイル名部分, Len(ファイル名部分) - 5)
@@ -423,7 +288,7 @@ Public Sub ファイル出力(toolSheet As Worksheet, templateSheet As Worksheet)
     ' 値のみをコピー（書式なし）
     If 最終行 >= 出力タイトル行 Then
         Dim コピー範囲 As Range
-        Set コピー範囲 = 新しいワークシート.Range(新しいワークシート.Cells(出力タイトル行, 1), 新しいワークシート.Cells(最終行, 新しいワークシート.Cells(出力タイトル行, 新しいワークシート.Columns.Count).End(xlToLeft).Column))
+        Set コピー範囲 = 新しいワークシート.Range(新しいワークシート.Cells(出力タイトル行, 1), 新しいワークシート.Cells(最終行, 新しいワークシート.UsedRange.Column + 新しいワークシート.UsedRange.Columns.Count - 1))
         テンプレートワードシート.Cells(出力タイトル行, 1).Resize(コピー範囲.Rows.Count, コピー範囲.Columns.Count).Value = コピー範囲.Value
     End If
 
@@ -434,7 +299,7 @@ Public Sub ファイル出力(toolSheet As Worksheet, templateSheet As Worksheet)
     ' テンプレートワードファイルを保存
     Dim ワードファイルパス As String
     ワードファイルパス = テンプレートワードファイル保存(フォルダパス部分, toolSheet)
-    
+
     ' テンプレートワードシートの既存内容をクリア
     テンプレートワードシート.UsedRange.ClearContents
 
@@ -1237,10 +1102,18 @@ Public Function 出力データ作成(toolSheet As Worksheet) As Variant
         End If
 
         ' ステータス
-        If 出力結果(出力行数, 出力_計算期間開始日列) = 手続開始日_期失レコード Then
-            出力結果(出力行数, 出力_ステータス列) = 期失劣後ステータス文字列
+        If ローン口座ステータス = 期限切れ理由文字列 Then
+            If 出力結果(出力行数, 出力_計算期間開始日列) = 手続開始日_期失レコード Then
+                出力結果(出力行数, 出力_ステータス列) = 期限切れ劣後ステータス文字列
+            Else
+                出力結果(出力行数, 出力_ステータス列) = 期限切れ理由文字列
+            End If        
         Else
-            出力結果(出力行数, 出力_ステータス列) = 期失ステータス文字列
+            If 出力結果(出力行数, 出力_計算期間開始日列) = 手続開始日_期失レコード Then
+                出力結果(出力行数, 出力_ステータス列) = 期失劣後ステータス文字列
+            Else
+                出力結果(出力行数, 出力_ステータス列) = 期失ステータス文字列
+            End If
         End If
 
         ' イベント
@@ -1561,8 +1434,8 @@ Public Function 入出金情報全体取得(toolSheet As Worksheet) As Variant
             End If
         End If
 
-        ' データ配列(i, 5)算出完了後の追加調整：摘要が「返済分」で終わる場合は入出金金額を減らす
-        If Len(データ配列(i, 2)) >= Len(返済摘要返済分文字列) And Right(データ配列(i, 2), Len(返済摘要返済分文字列)) = 返済摘要返済分文字列 Then
+        ' データ配列(i, 5)算出完了後の追加調整：摘要が「返済分」で終わる場合は入出金金額を減らす（ただ、最初の行は除く）
+        If i > 1 And Len(データ配列(i, 2)) >= Len(返済摘要返済分文字列) And Right(データ配列(i, 2), Len(返済摘要返済分文字列)) = 返済摘要返済分文字列 Then
             データ配列(i, 5) = データ配列(i, 5) - データ配列(i, 3)
         End If
 

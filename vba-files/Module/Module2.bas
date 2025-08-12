@@ -1,462 +1,648 @@
 Option Explicit
 
-Public Const å†…éƒ¨ä»•æ§˜ã®åŒºåˆ‡ã‚Šæ–‡å­— As String = "{{å†…éƒ¨ä»•æ§˜ã®åŒºåˆ‡ã‚Šæ–‡å­—}}"
+' ’è”’è‹`
 
-' ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ_WORDãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜é–¢æ•°
-' å¼•æ•°: ä¿å­˜å…ˆãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹
-' æˆ»ã‚Šå€¤: ä¿å­˜ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã®å®Œå…¨ãƒ‘ã‚¹
-Public Function ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜(ä¿å­˜å…ˆãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹ As String, toolSheet As Worksheet) As String
+' “üo‹àî•ñŠÖ˜A’è”
+Public Const “üo‹àŠJŽns As Long = 51 ' “üo‹àƒf[ƒ^ŠJŽns
+Public Const “üo‹à“ú—ñ As Long = 2     ' B—ñF“üo‹à“ú
+Public Const “E—v—ñ As Long = 3         ' C—ñF“E—v
+Public Const “üo‹à‹àŠz—ñ As Long = 4   ' D—ñF“üo‹à‹àŠz
+Public Const Žc‚—ñ As Long = 5         ' E—ñFŽc‚
+Public Const –ñ’è•ÔÏŒ³‹à—ñ As Long = 6 ' F—ñF‰„‘Ø’†‚Ì–ñ’è•ÔÏŒ³‹à‡Œv
+Public Const “üo‹àî•ñÅ‘ås” As Long = 20  ' “üo‹àî•ñ‚ÌÅ‘åÝ’è‰Â”\s”
+
+' ŠúŽ¸“úŠÖ˜A’è”
+Public Const ŠúŽ¸“ú—ñ As Long = 3  ' C—ñ
+Public Const ŠúŽ¸“ús As Long = 30  ' 30s–Ú
+
+' ŽØ“ü—˜—¦ŠÖ˜A’è”
+Public Const ŽØ“ü—˜—¦—ñ As Long = 2  ' B—ñFŽØ“ü—˜—¦
+Public Const ŽØ“ü—˜—¦ŠJŽn“ú—ñ As Long = 3  ' C—ñFŠJŽn“ú
+Public Const ŽØ“ü—˜—¦ŠJŽns As Long = 34  ' 24s–Ú
+Public Const ŽØ“ü—˜—¦Å‘ås” As Long = 2  ' ŽØ“ü—˜—¦‚ÌÅ‘åÝ’è‰Â”\s”
+
+' ’x‰„‘¹ŠQ‹à—˜—¦ŠÖ˜A’è”
+Public Const ’x‰„‘¹ŠQ‹à—˜—¦—ñ As Long = 2  ' B—ñF’x‰„‘¹ŠQ‹à—˜—¦
+Public Const ’x‰„‘¹ŠQ‹à—˜—¦ŠJŽn“ú—ñ As Long = 3  ' C—ñFŠJŽn“ú
+Public Const ’x‰„‘¹ŠQ‹à—˜—¦ŠJŽns As Long = 15  ' 15s–Ú
+Public Const ’x‰„‘¹ŠQ‹à—˜—¦Å‘ås” As Long = 3  ' Å‘å3s‚Ü‚ÅÝ’è‰Â”\
+
+' ŒvŽZ‘ì¬ƒpƒXŠÖ˜A’è”
+Public Const ŒvŽZ‘ì¬ƒpƒX—ñ As Long = 3  ' C—ñFŒvŽZ‘ì¬ƒpƒX
+Public Const ŒvŽZ‘ì¬ƒpƒXs As Long = 7  ' 7s–Ú
+
+' ŒÚ‹q”Ô†ŠÖ˜A’è”
+Public Const ŒÚ‹q”Ô†—ñ As Long = 3  ' C—ñFŒÚ‹q”Ô†
+Public Const ŒÚ‹q”Ô†s As Long = 6  ' 6s–Ú
+
+' Žè‘±——RŠÖ˜A’è”
+Public Const Žè‘±——R—ñ As Long = 3  ' C—ñFŽè‘±——R
+Public Const Žè‘±——Rs As Long = 10  ' 10s–Ú
+
+' Žè‘±ŠJŽn“úŠÖ˜A’è”
+Public Const Žè‘±ŠJŽn“ú—ñ As Long = 3  ' C—ñFŽè‘±ŠJŽn“ú
+Public Const Žè‘±ŠJŽn“ús As Long = 11  ' 11s–Ú
+
+' ƒ[ƒ“ŒûÀƒXƒe[ƒ^ƒXŠÖ˜A’è”
+Public Const ƒ[ƒ“ŒûÀƒXƒe[ƒ^ƒX—ñ As Long = 3  ' C—ñFƒ[ƒ“ŒûÀƒXƒe[ƒ^ƒX
+Public Const ƒ[ƒ“ŒûÀƒXƒe[ƒ^ƒXs As Long = 27  ' 27s–Ú
+
+' ŠúŽ¸——RŠÖ˜A’è”
+Public Const ŠúŽ¸——R—ñ As Long = 5  ' E—ñFŠúŽ¸——R
+Public Const ŠúŽ¸——Rs As Long = 30  ' 30s–Ú
+
+' ‰‰ñŽØ“ü“úŠÖ˜A’è”
+Public Const ‰‰ñŽØ“ü“ú—ñ As Long = 3  ' C—ñF‰‰ñŽØ“ü“ú
+Public Const ‰‰ñŽØ“ü“ús As Long = 22  ' 22s–Ú
+
+' Œ_–ñŠúŒÀ“úŠÖ˜A’è”
+Public Const Œ_–ñŠúŒÀ“ú—ñ As Long = 3  ' C—ñFŒ_–ñŠúŒÀ“ú
+Public Const Œ_–ñŠúŒÀ“ús As Long = 23  ' 23s–Ú
+
+' ŽØ“üŒÀ“xŠzŠÖ˜A’è”
+Public Const ŽØ“üŒÀ“xŠz—ñ As Long = 3  ' C—ñFŽØ“üŒÀ“xŠz
+Public Const ŽØ“üŒÀ“xŠzs As Long = 24  ' 24s–Ú
+
+' “E—v•¶Žš—ñŠÖ˜A’è”
+Public Const ŽØ“ü“E—vŽØ“ü•¶Žš—ñ As String = "ŽØ“ü"     ' ŽØ“ü‚ðŽ¦‚·“E—v•¶Žš—ñ
+Public Const ŽØ“ü“E—vŽØŠ·•¶Žš—ñ As String = "ŽØŠ·"     ' ŽØŠ·‚ðŽ¦‚·“E—v•¶Žš—ñ
+Public Const •ÔÏ“E—v•ÔÏ•ª•¶Žš—ñ As String = "•ÔÏ•ª"   ' •ÔÏ‚ðŽ¦‚·“E—v•¶Žš—ñ
+
+' ƒ[ƒ“ŒûÀƒXƒe[ƒ^ƒXŠÖ˜A’è”
+Public Const ŠúŽ¸ƒXƒe[ƒ^ƒX•¶Žš—ñ As String = "ŠúŽ¸"  ' ŠúŽ¸‚ðŽ¦‚·ƒXƒe[ƒ^ƒX•¶Žš—ñ
+Public Const ŠúŒÀØ‚ê——R•¶Žš—ñ As String = "ŠúŒÀØ‚ê"  ' ŠúŒÀØ‚ê‚ðŽ¦‚·——R•¶Žš—ñ
+Public Const ³íƒXƒe[ƒ^ƒX•¶Žš—ñ As String = "³í"  ' ³í‚ðŽ¦‚·ƒXƒe[ƒ^ƒX•¶Žš—ñ
+Public Const –ñ’è•ÔÏƒCƒxƒ“ƒg•¶Žš—ñ As String = "–ñ’è•ÔÏ"  ' –ñ’è•ÔÏ‚ðŽ¦‚·ƒCƒxƒ“ƒg•¶Žš—ñ
+Public Const ŠúŽ¸—òŒãƒXƒe[ƒ^ƒX•¶Žš—ñ As String = "ŠúŽ¸i—òŒãj"  ' ŠúŽ¸i—òŒãj‚ðŽ¦‚·ƒXƒe[ƒ^ƒX•¶Žš—ñ
+Public Const ŠúŒÀØ‚ê—òŒãƒXƒe[ƒ^ƒX•¶Žš—ñ As String = "ŠúŒÀØ‚êi—òŒãj"  ' ŠúŒÀØ‚êi—òŒãj‚ðŽ¦‚·ƒXƒe[ƒ^ƒX•¶Žš—ñ
+Public Const ‰„‘ØƒCƒxƒ“ƒg•¶Žš—ñ As String = "‰„‘Ø"  ' ‰„‘Ø‚ðŽ¦‚·ƒCƒxƒ“ƒg•¶Žš—ñ
+Public Const “à“üƒCƒxƒ“ƒg•¶Žš—ñ As String = "“à“ü"  ' “à“ü‚ðŽ¦‚·ƒCƒxƒ“ƒg•¶Žš—ñ
+Public Const ”jŽYƒCƒxƒ“ƒg•¶Žš—ñ As String = "”jŽY"  ' ”jŽYƒCƒxƒ“ƒg•¶Žš—ñ
+Public Const —˜‘§“E—v•¶Žš—ñ As String = "—˜‘§"  ' —˜‘§‚ðŽ¦‚·“E—v•¶Žš—ñ
+Public Const ’x‰„‘¹ŠQ‹à“E—v•¶Žš—ñ As String = "’x‰„‘¹ŠQ‹à"  ' ’x‰„‘¹ŠQ‹à‚ðŽ¦‚·“E—v•¶Žš—ñ
+
+' “ú•tŠÖ˜A’è”
+Public Const “ú•t‰Šú’l As Date = #1/1/1900#  ' ‹ó”’“ú•t‚Ì‰Šú’l
+
+' ƒ[ƒNƒV[ƒg–¼ŠÖ˜A’è”
+Public Const ƒc[ƒ‹ƒV[ƒg–¼ As String = "ƒc[ƒ‹"  ' ƒc[ƒ‹ƒV[ƒg‚Ì–¼‘O
+Public Const ƒeƒ“ƒvƒŒ[ƒgƒV[ƒg–¼ As String = "ƒeƒ“ƒvƒŒ[ƒg_EXCEL"  ' ƒeƒ“ƒvƒŒ[ƒgƒV[ƒg‚Ì–¼‘O
+Public Const ƒeƒ“ƒvƒŒ[ƒgƒ[ƒhƒV[ƒg–¼ As String = "ƒeƒ“ƒvƒŒ[ƒg_WORD"  ' ƒeƒ“ƒvƒŒ[ƒgWORDƒV[ƒg‚Ì–¼‘O
+
+' o—ÍŠÖ˜A’è”
+Public Const o—Íƒ^ƒCƒgƒ‹s As Long = 7  ' o—Íƒ^ƒCƒgƒ‹s
+Public Const o—ÍŠJŽnsƒIƒtƒZƒbƒg As Long = 8  ' A9ƒZƒ‹‚©‚ç“\‚è•t‚¯‚é‚½‚ß‚ÌƒIƒtƒZƒbƒg
+Public Const o—ÍŒÚ‹q”Ô†s As Long = 4  ' B4sFŒÚ‹q”Ô†
+Public Const o—ÍŒÚ‹q”Ô†—ñ As Long = 2  ' B—ñFŒÚ‹q”Ô†
+Public Const o—ÍŽè‘±ŠJŽn“ús As Long = 2  ' J2sFŽè‘±ŠJŽn“ú
+Public Const o—ÍŽè‘±ŠJŽn“ú—ñ As Long = 10  ' J—ñFŽè‘±ŠJŽn“ú
+Public Const o—ÍŠúŽ¸“ús As Long = 3  ' J3sFŠúŽ¸“ú
+Public Const o—ÍŠúŽ¸“ú—ñ As Long = 10  ' J—ñFŠúŽ¸“ú
+Public Const o—ÍŠúŽ¸——Rs As Long = 3  ' K3sFŠúŽ¸——R
+Public Const o—ÍŠúŽ¸——R—ñ As Long = 11  ' K—ñFŠúŽ¸——R
+
+' o—Í€–Ú—ñ’è”iA—ñ`S—ñj
+Public Const o—Í_’Ê”Ô—ñ As Long = 1          ' A—ñF’Ê”Ô
+Public Const o—Í_ƒXƒe[ƒ^ƒX—ñ As Long = 2      ' B—ñFƒXƒe[ƒ^ƒX
+Public Const o—Í_ƒCƒxƒ“ƒg—ñ As Long = 3        ' C—ñFƒCƒxƒ“ƒg
+Public Const o—Í_–ñ’è•ÔÏŒŽ—ñ As Long = 4      ' D—ñF–ñ’è•ÔÏŒŽ
+Public Const o—Í_‘ÎÛŒ³‹à—ñ As Long = 5        ' E—ñF‘ÎÛŒ³‹à
+Public Const o—Í_ŒvŽZŠúŠÔŠJŽn“ú—ñ As Long = 6  ' F—ñFŒvŽZŠúŠÔŠJŽn“ú
+Public Const o—Í_‹æØ‚è—ñ As Long = 7          ' G—ñF"`"
+Public Const o—Í_ŒvŽZŠúŠÔI—¹“ú—ñ As Long = 8  ' H—ñFŒvŽZŠúŠÔI—¹“ú
+Public Const o—Í_ŒvŽZ“ú”—ñ As Long = 9        ' I—ñFŒvŽZ“ú”
+Public Const o—Í_—˜—¦—ñ As Long = 10           ' J—ñF—˜—¦
+Public Const o—Í_Ï”—ñ As Long = 11           ' K—ñFÏ”
+Public Const o—Í_—˜‘§‹àŠz—ñ As Long = 12       ' L—ñF—˜‘§‹àŠz
+Public Const o—Í_’x‰„‘¹ŠQ‹à—ñ As Long = 13     ' M—ñF’x‰„‘¹ŠQ‹à
+Public Const o—Í_ŽØ“ü“ú—ñ As Long = 14         ' N—ñFŽØ“ü“ú
+Public Const o—Í_ŽØ“üŠz—ñ As Long = 15         ' O—ñFŽØ“üŠz
+Public Const o—Í_•ÔÏ“ú—ñ As Long = 16         ' P—ñF•ÔÏ“ú
+Public Const o—Í_Œ³‹à_•ÔÏŠz—ñ As Long = 17    ' Q—ñFŒ³‹à_•ÔÏŠz
+Public Const o—Í_—˜‘§_•ÔÏŠz—ñ As Long = 18    ' R—ñF—˜‘§_•ÔÏŠz
+Public Const o—Í_’x‘¹‹à_•ÔÏŠz—ñ As Long = 19  ' S—ñF’x‘¹‹à_•ÔÏŠz
+
+' •ÔÏ—\’èî•ñ‚Ì’è”
+Public Const •ÔÏ—\’èŠJŽns As Long = 40  ' 40s–Ú
+Public Const •ÔÏ—\’è“ú—ñ As Long = 3  ' C—ñ
+Public Const •ÔÏŒ³‹à—ñ As Long = 4    ' D—ñ
+
+' •ÔÏ—š—ðî•ñ‚Ì’è”
+Public Const •ÔÏ—š—ðŠJŽns As Long = 75   ' 75s–Ú
+Public Const •ÔÏ—š—ð“ú•t—ñ As Long = 2    ' B—ñF“ú•t
+Public Const •ÔÏ—š—ð“E—v—ñ As Long = 3    ' C—ñF“E—v
+Public Const •ÔÏ—š—ðo‹à‹àŠz—ñ As Long = 4 ' D—ñFo‹à‹àŠz
+Public Const •ÔÏ—š—ðî•ñÅ‘ås” As Long = 20  ' •ÔÏ—š—ðî•ñ‚ÌÅ‘åÝ’è‰Â”\s”
+
+' íœÅŒãs–Ú‚Ì’è”
+Public Const íœÅŒãs–Ú As Long = 69
+
+' ƒf[ƒ^“\‚è•t‚¯ŠJŽns‚Ì’è”
+Public Const ƒf[ƒ^“\‚è•t‚¯ŠJŽns As Long = o—ÍŠJŽnsƒIƒtƒZƒbƒg + 1
+
+' ƒeƒ“ƒvƒŒ[ƒg_WORDƒtƒ@ƒCƒ‹•Û‘¶ŠÖ”
+' ˆø”: •Û‘¶æƒtƒHƒ‹ƒ_ƒpƒX
+' –ß‚è’l: •Û‘¶‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ÌŠ®‘SƒpƒX
+Public Function ƒeƒ“ƒvƒŒ[ƒgƒ[ƒhƒtƒ@ƒCƒ‹•Û‘¶(•Û‘¶æƒtƒHƒ‹ƒ_ƒpƒX As String, toolSheet As Worksheet) As String
     On Error GoTo ErrorHandler
     
-    Dim ãƒ¯ãƒ¼ã‚¯ãƒ–ãƒƒã‚¯ As Workbook
-    Dim ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ As Worksheet
-    Dim åŸ‹ã‚è¾¼ã¿ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ As OLEObject
-    Dim åŸºæœ¬ãƒ•ã‚¡ã‚¤ãƒ«å As String
-    Dim æ‹¡å¼µå­ As String
-    Dim å®Œå…¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ As String
-    Dim ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ As String
-    Dim ã‚«ã‚¦ãƒ³ã‚¿ As Long
+    Dim ƒ[ƒNƒuƒbƒN As Workbook
+    Dim ƒ[ƒNƒV[ƒg As Worksheet
+    Dim –„‚ßž‚ÝƒIƒuƒWƒFƒNƒg As OLEObject
+    Dim Šî–{ƒtƒ@ƒCƒ‹–¼ As String
+    Dim Šg’£Žq As String
+    Dim Š®‘Sƒtƒ@ƒCƒ‹ƒpƒX As String
+    Dim •Û‘¶ƒtƒ@ƒCƒ‹ƒpƒX As String
+    Dim ƒJƒEƒ“ƒ^ As Long
     
-    ' ç¾åœ¨ã®ãƒ¯ãƒ¼ã‚¯ãƒ–ãƒƒã‚¯ã¨ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ_WORDã‚·ãƒ¼ãƒˆã‚’å–å¾—
-    Set ãƒ¯ãƒ¼ã‚¯ãƒ–ãƒƒã‚¯ = ThisWorkbook
-    Set ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ = ãƒ¯ãƒ¼ã‚¯ãƒ–ãƒƒã‚¯.Worksheets(ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ¯ãƒ¼ãƒ‰ã‚·ãƒ¼ãƒˆå)
+    ' Œ»Ý‚Ìƒ[ƒNƒuƒbƒN‚Æƒeƒ“ƒvƒŒ[ƒg_WORDƒV[ƒg‚ðŽæ“¾
+    Set ƒ[ƒNƒuƒbƒN = ThisWorkbook
+    Set ƒ[ƒNƒV[ƒg = ƒ[ƒNƒuƒbƒN.Worksheets(ƒeƒ“ƒvƒŒ[ƒgƒ[ƒhƒV[ƒg–¼)
     
-    ' åŸ‹ã‚è¾¼ã¿Wordãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ¤œç´¢
-    Set åŸ‹ã‚è¾¼ã¿ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ = Nothing
+    ' –„‚ßž‚ÝWordƒtƒ@ƒCƒ‹‚ðŒŸõ
+    Set –„‚ßž‚ÝƒIƒuƒWƒFƒNƒg = Nothing
     Dim obj As OLEObject
-    For Each obj In ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ.OLEObjects
+    For Each obj In ƒ[ƒNƒV[ƒg.OLEObjects
         If obj.progID Like "Word.*" Then
-            Set åŸ‹ã‚è¾¼ã¿ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ = obj
+            Set –„‚ßž‚ÝƒIƒuƒWƒFƒNƒg = obj
             Exit For
         End If
     Next obj
     
-    ' åŸ‹ã‚è¾¼ã¿ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒè¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã¯ã‚¨ãƒ©ãƒ¼
-    If åŸ‹ã‚è¾¼ã¿ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ Is Nothing Then
-        Err.Raise 1001, "ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜", "ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ_WORDã‚·ãƒ¼ãƒˆã«åŸ‹ã‚è¾¼ã¿Wordãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚"
+    ' –„‚ßž‚ÝƒIƒuƒWƒFƒNƒg‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚ÍƒGƒ‰[
+    If –„‚ßž‚ÝƒIƒuƒWƒFƒNƒg Is Nothing Then
+        Err.Raise 1001, "ƒeƒ“ƒvƒŒ[ƒgƒ[ƒhƒtƒ@ƒCƒ‹•Û‘¶", "ƒeƒ“ƒvƒŒ[ƒg_WORDƒV[ƒg‚É–„‚ßž‚ÝWordƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB"
     End If
     
-    ' ä¿å­˜å…ˆãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹ã®æœ«å°¾ã«ãƒãƒƒã‚¯ã‚¹ãƒ©ãƒƒã‚·ãƒ¥ã‚’è¿½åŠ ï¼ˆå¿…è¦ã«å¿œã˜ã¦ï¼‰
-    If Right(ä¿å­˜å…ˆãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹, 1) <> "\" Then
-        ä¿å­˜å…ˆãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹ = ä¿å­˜å…ˆãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹ & "\"
+    ' •Û‘¶æƒtƒHƒ‹ƒ_ƒpƒX‚Ì––”ö‚ÉƒoƒbƒNƒXƒ‰ƒbƒVƒ…‚ð’Ç‰Ái•K—v‚É‰ž‚¶‚Äj
+    If Right(•Û‘¶æƒtƒHƒ‹ƒ_ƒpƒX, 1) <> "\" Then
+        •Û‘¶æƒtƒHƒ‹ƒ_ƒpƒX = •Û‘¶æƒtƒHƒ‹ƒ_ƒpƒX & "\"
     End If
     
-    ' åŸºæœ¬ãƒ•ã‚¡ã‚¤ãƒ«åã¨æ‹¡å¼µå­ã‚’è¨­å®š
-    Dim é¡§å®¢ç•ªå· As String
-    é¡§å®¢ç•ªå· = é¡§å®¢ç•ªå·å–å¾—(toolSheet)
-    åŸºæœ¬ãƒ•ã‚¡ã‚¤ãƒ«å = "åˆ©æ¯è¨ˆç®—æ›¸" & é¡§å®¢ç•ªå·
-    æ‹¡å¼µå­ = ".docx"
+    ' Šî–{ƒtƒ@ƒCƒ‹–¼‚ÆŠg’£Žq‚ðÝ’è
+    Dim ŒÚ‹q”Ô† As String
+    ŒÚ‹q”Ô† = ŒÚ‹q”Ô†Žæ“¾(toolSheet)
+    Šî–{ƒtƒ@ƒCƒ‹–¼ = "—˜‘§ŒvŽZ‘" & ŒÚ‹q”Ô†
+    Šg’£Žq = ".docx"
     
-    ' å®Œå…¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’ä½œæˆ
-    å®Œå…¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ = ä¿å­˜å…ˆãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹ & åŸºæœ¬ãƒ•ã‚¡ã‚¤ãƒ«å & æ‹¡å¼µå­
-    ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ = å®Œå…¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+    ' Š®‘Sƒtƒ@ƒCƒ‹ƒpƒX‚ðì¬
+    Š®‘Sƒtƒ@ƒCƒ‹ƒpƒX = •Û‘¶æƒtƒHƒ‹ƒ_ƒpƒX & Šî–{ƒtƒ@ƒCƒ‹–¼ & Šg’£Žq
+    •Û‘¶ƒtƒ@ƒCƒ‹ƒpƒX = Š®‘Sƒtƒ@ƒCƒ‹ƒpƒX
     
-    ' é€£ç•ªã‚«ã‚¦ãƒ³ã‚¿ã‚’åˆæœŸåŒ–
-    ã‚«ã‚¦ãƒ³ã‚¿ = 1
+    ' ˜A”ÔƒJƒEƒ“ƒ^‚ð‰Šú‰»
+    ƒJƒEƒ“ƒ^ = 1
     
-    ' æ—¢å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹å ´åˆã¯é€£ç•ªã‚’ä»˜ã‘ã¦æ–°ã—ã„ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ä½œæˆ
-    Do While Dir(ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹) <> ""
-        Dim ãƒ•ã‚¡ã‚¤ãƒ«åéƒ¨åˆ† As String
-        Dim æ‹¡å¼µå­éƒ¨åˆ† As String
-        Dim ãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹éƒ¨åˆ† As String
+    ' Šù‘¶ƒtƒ@ƒCƒ‹‚ª‚ ‚éê‡‚Í˜A”Ô‚ð•t‚¯‚ÄV‚µ‚¢ƒtƒ@ƒCƒ‹–¼‚ðì¬
+    Dim fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    Do While fso.FileExists(•Û‘¶ƒtƒ@ƒCƒ‹ƒpƒX)
+        Dim ƒtƒ@ƒCƒ‹–¼•”•ª As String
+        Dim Šg’£Žq•”•ª As String
+        Dim ƒtƒHƒ‹ƒ_ƒpƒX•”•ª As String
 
-        ' ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’åˆ†è§£
-        ãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹éƒ¨åˆ† = Left(å®Œå…¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹, InStrRev(å®Œå…¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹, "\"))
-        ãƒ•ã‚¡ã‚¤ãƒ«åéƒ¨åˆ† = Mid(å®Œå…¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹, InStrRev(å®Œå…¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹, "\") + 1)
-        æ‹¡å¼µå­éƒ¨åˆ† = Right(ãƒ•ã‚¡ã‚¤ãƒ«åéƒ¨åˆ†, 5) ' ".docx"
-        ãƒ•ã‚¡ã‚¤ãƒ«åéƒ¨åˆ† = Left(ãƒ•ã‚¡ã‚¤ãƒ«åéƒ¨åˆ†, Len(ãƒ•ã‚¡ã‚¤ãƒ«åéƒ¨åˆ†) - 5)
+        ' ƒtƒ@ƒCƒ‹ƒpƒX‚ð•ª‰ð
+        ƒtƒHƒ‹ƒ_ƒpƒX•”•ª = Left(Š®‘Sƒtƒ@ƒCƒ‹ƒpƒX, InStrRev(Š®‘Sƒtƒ@ƒCƒ‹ƒpƒX, "\"))
+        ƒtƒ@ƒCƒ‹–¼•”•ª = Mid(Š®‘Sƒtƒ@ƒCƒ‹ƒpƒX, InStrRev(Š®‘Sƒtƒ@ƒCƒ‹ƒpƒX, "\") + 1)
+        Šg’£Žq•”•ª = Right(ƒtƒ@ƒCƒ‹–¼•”•ª, 5) ' ".docx"
+        ƒtƒ@ƒCƒ‹–¼•”•ª = Left(ƒtƒ@ƒCƒ‹–¼•”•ª, Len(ƒtƒ@ƒCƒ‹–¼•”•ª) - 5)
 
-        ' é€£ç•ªä»˜ããƒ•ã‚¡ã‚¤ãƒ«åã‚’ä½œæˆ
-        ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ = ãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹éƒ¨åˆ† & ãƒ•ã‚¡ã‚¤ãƒ«åéƒ¨åˆ† & "(" & ã‚«ã‚¦ãƒ³ã‚¿ & ")" & æ‹¡å¼µå­éƒ¨åˆ†
-        ã‚«ã‚¦ãƒ³ã‚¿ = ã‚«ã‚¦ãƒ³ã‚¿ + 1
+        ' ˜A”Ô•t‚«ƒtƒ@ƒCƒ‹–¼‚ðì¬
+        •Û‘¶ƒtƒ@ƒCƒ‹ƒpƒX = ƒtƒHƒ‹ƒ_ƒpƒX•”•ª & ƒtƒ@ƒCƒ‹–¼•”•ª & "(" & ƒJƒEƒ“ƒ^ & ")" & Šg’£Žq•”•ª
+        ƒJƒEƒ“ƒ^ = ƒJƒEƒ“ƒ^ + 1
     Loop
     
-    ' åŸ‹ã‚è¾¼ã¿Wordãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜
-    åŸ‹ã‚è¾¼ã¿ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.Verb xlVerbOpen ' Wordãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+    ' –„‚ßž‚ÝWordƒtƒ@ƒCƒ‹‚ð•Û‘¶
+    –„‚ßž‚ÝƒIƒuƒWƒFƒNƒg.Verb xlVerbOpen ' Wordƒtƒ@ƒCƒ‹‚ðŠJ‚­
     
-    ' Wordã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜
+    ' WordƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ðŽæ“¾‚µ‚Äƒtƒ@ƒCƒ‹‚ð•Û‘¶
     Dim wordApp As Object
     Dim wordDoc As Object
     Set wordApp = GetObject(, "Word.Application")
-    Set wordDoc = åŸ‹ã‚è¾¼ã¿ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.Object
+    Set wordDoc = –„‚ßž‚ÝƒIƒuƒWƒFƒNƒg.Object
     
-    ' ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šãƒ‘ã‚¹ã«ä¿å­˜
-    wordDoc.SaveAs2 ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+    ' ƒtƒ@ƒCƒ‹‚ðŽw’èƒpƒX‚É•Û‘¶
+    wordDoc.SaveAs2 •Û‘¶ƒtƒ@ƒCƒ‹ƒpƒX
     wordDoc.Close
     
-    ' ä¿å­˜ã•ã‚ŒãŸWordãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+    ' •Û‘¶‚³‚ê‚½Wordƒtƒ@ƒCƒ‹‚ðŠJ‚­
     wordApp.Visible = False
-    Set wordDoc = wordApp.Documents.Open(ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹)
+    Set wordDoc = wordApp.Documents.Open(•Û‘¶ƒtƒ@ƒCƒ‹ƒpƒX)
     wordApp.ScreenUpdating = False
     
-    ' Wordãƒ•ã‚¡ã‚¤ãƒ«ã®å†…å®¹ã‚’ä¸€æ‹¬ç½®æ›
-    ãƒ¯ãƒ¼ãƒ‰å…¨ç½®æ›å®Ÿè¡Œ wordDoc, toolSheet
+    ' Wordƒtƒ@ƒCƒ‹‚Ì“à—e‚ðˆêŠ‡’uŠ·
+    ƒ[ƒh‘S’uŠ·ŽÀs wordDoc, toolSheet
 
     wordApp.ScreenUpdating = True
     
-    ' ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šãƒ‘ã‚¹ã«ä¿å­˜
-    wordDoc.SaveAs2 ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+    ' ƒtƒ@ƒCƒ‹‚ðŽw’èƒpƒX‚É•Û‘¶
+    wordDoc.SaveAs2 •Û‘¶ƒtƒ@ƒCƒ‹ƒpƒX
     wordDoc.Close
     wordApp.Quit
     Set wordDoc = Nothing
     Set wordApp = Nothing
    
-    ' æˆ»ã‚Šå€¤ã¨ã—ã¦ä¿å­˜ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’è¿”ã™
-    ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜ = ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
+    ' –ß‚è’l‚Æ‚µ‚Ä•Û‘¶‚³‚ê‚½ƒtƒ@ƒCƒ‹ƒpƒX‚ð•Ô‚·
+    ƒeƒ“ƒvƒŒ[ƒgƒ[ƒhƒtƒ@ƒCƒ‹•Û‘¶ = •Û‘¶ƒtƒ@ƒCƒ‹ƒpƒX
     
     Exit Function
     
 ErrorHandler:
-    ' ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°
-    Dim ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ As String
-    ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ = "ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆWordãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚" & vbCrLf & _
-                    "ã‚¨ãƒ©ãƒ¼ç•ªå·: " & Err.Number & vbCrLf & _
-                    "ã‚¨ãƒ©ãƒ¼å†…å®¹: " & Err.Description
+    ' ƒGƒ‰[ƒnƒ“ƒhƒŠƒ“ƒO
+    Dim ƒGƒ‰[ƒƒbƒZ[ƒW As String
+    ƒGƒ‰[ƒƒbƒZ[ƒW = "ƒeƒ“ƒvƒŒ[ƒgWordƒtƒ@ƒCƒ‹‚Ì•Û‘¶’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½B" & vbCrLf & _
+                    "ƒGƒ‰[”Ô†: " & Err.Number & vbCrLf & _
+                    "ƒGƒ‰[“à—e: " & Err.Description
     
-    ' Wordã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãŒé–‹ã„ã¦ã„ã‚‹å ´åˆã¯ã‚¯ãƒªãƒ¼ãƒ³ã‚¢ãƒƒãƒ—
+    ' WordƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ªŠJ‚¢‚Ä‚¢‚éê‡‚ÍƒNƒŠ[ƒ“ƒAƒbƒv
     On Error Resume Next
     If Not wordDoc Is Nothing Then wordDoc.Close False
     On Error GoTo 0
     
-    Err.Raise Err.Number, "ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜", ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+    Err.Raise Err.Number, "ƒeƒ“ƒvƒŒ[ƒgƒ[ƒhƒtƒ@ƒCƒ‹•Û‘¶", ƒGƒ‰[ƒƒbƒZ[ƒW
 End Function
 
-' Wordå…¨ç½®æ›å®Ÿè¡Œé–¢æ•°
-' å¼•æ•°: Wordãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ
-' æˆ»ã‚Šå€¤: ãªã—ï¼ˆåˆ©æ¯è¨ˆç®—æ›¸ã«å¿…è¦ãªå…¨ã¦ã®ç½®æ›ã‚’å®Ÿè¡Œï¼‰
-Public Sub ãƒ¯ãƒ¼ãƒ‰å…¨ç½®æ›å®Ÿè¡Œ(wordDoc As Object, toolSheet As Worksheet)
+' Word‘S’uŠ·ŽÀsŠÖ”
+' ˆø”: WordƒhƒLƒ…ƒƒ“ƒg
+' –ß‚è’l: ‚È‚µi—˜‘§ŒvŽZ‘‚É•K—v‚È‘S‚Ä‚Ì’uŠ·‚ðŽÀsj
+Public Sub ƒ[ƒh‘S’uŠ·ŽÀs(wordDoc As Object, toolSheet As Worksheet)
     On Error GoTo ErrorHandler
 
-    ' ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ¯ãƒ¼ãƒ‰ã‚·ãƒ¼ãƒˆã‹ã‚‰ç›´æŽ¥ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
-    Dim ãƒ¯ãƒ¼ã‚¯ãƒ–ãƒƒã‚¯ As Workbook
-    Dim ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ As Worksheet
-    Set ãƒ¯ãƒ¼ã‚¯ãƒ–ãƒƒã‚¯ = toolSheet.Parent
-    Set ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ = ãƒ¯ãƒ¼ã‚¯ãƒ–ãƒƒã‚¯.Worksheets(ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ¯ãƒ¼ãƒ‰ã‚·ãƒ¼ãƒˆå)
+    ' ƒeƒ“ƒvƒŒ[ƒgƒ[ƒhƒV[ƒg‚©‚ç’¼Úƒf[ƒ^‚ðŽæ“¾
+    Dim ƒ[ƒNƒuƒbƒN As Workbook
+    Dim ƒ[ƒNƒV[ƒg As Worksheet
+    Set ƒ[ƒNƒuƒbƒN = toolSheet.Parent
+    Set ƒ[ƒNƒV[ƒg = ƒ[ƒNƒuƒbƒN.Worksheets(ƒeƒ“ƒvƒŒ[ƒgƒ[ƒhƒV[ƒg–¼)
     
-    ' å‡ºåŠ›é–‹å§‹è¡Œ+1è¡Œã‹ã‚‰æœ€çµ‚è¡Œã¾ã§ã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
-    Dim æœ€çµ‚è¡Œ As Long
-    æœ€çµ‚è¡Œ = ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ.UsedRange.SpecialCells(xlCellTypeLastCell).Row
+    ' o—ÍŠJŽns+1s‚©‚çÅIs‚Ü‚Å‚Ìƒf[ƒ^‚ðŽæ“¾
+    Dim ÅIs As Long
+    ÅIs = ƒ[ƒNƒV[ƒg.UsedRange.SpecialCells(xlCellTypeLastCell).Row
     
-    Dim å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ As Variant
-    If æœ€çµ‚è¡Œ >= å‡ºåŠ›é–‹å§‹è¡Œã‚ªãƒ•ã‚»ãƒƒãƒˆ + 1 Then
-        å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ = ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ.Range(ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ.Cells(å‡ºåŠ›é–‹å§‹è¡Œã‚ªãƒ•ã‚»ãƒƒãƒˆ + 1, 1), ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ.Cells(æœ€çµ‚è¡Œ, ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ.Cells(å‡ºåŠ›é–‹å§‹è¡Œã‚ªãƒ•ã‚»ãƒƒãƒˆ + 1, ãƒ¯ãƒ¼ã‚¯ã‚·ãƒ¼ãƒˆ.Columns.Count).End(xlToLeft).Column)).Value
+    Dim o—Íƒf[ƒ^ As Variant
+    If ÅIs >= o—ÍŠJŽnsƒIƒtƒZƒbƒg + 1 Then
+        o—Íƒf[ƒ^ = ƒ[ƒNƒV[ƒg.Range(ƒ[ƒNƒV[ƒg.Cells(o—ÍŠJŽnsƒIƒtƒZƒbƒg + 1, 1), ƒ[ƒNƒV[ƒg.Cells(ÅIs, ƒ[ƒNƒV[ƒg.UsedRange.Column + ƒ[ƒNƒV[ƒg.UsedRange.Columns.Count - 1)).Value
     Else
-        ' ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã—ãªã„å ´åˆ
+        ' ƒf[ƒ^‚ª‘¶Ý‚µ‚È‚¢ê‡
         Exit Sub
     End If
     
-    ' å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ã®æœ€çµ‚è¡Œã‹ã‚‰å„è¨ˆç®—å€¤ã‚’å–å¾—
-    Dim è²¸ä»˜é‡‘_è¨ˆ As Variant
-    Dim ç´„å®šåˆ©æ¯é‡‘_è¨ˆ As Variant
-    Dim é…å»¶æå®³é‡‘_è¨ˆ As Variant
+    ' o—Íƒf[ƒ^‚ÌÅIs‚©‚çŠeŒvŽZ’l‚ðŽæ“¾
+    Dim ‘Ý•t‹à_Œv As Variant
+    Dim –ñ’è—˜‘§‹à_Œv As Variant
+    Dim ’x‰„‘¹ŠQ‹à_Œv As Variant
     
-    If IsArray(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿) And UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1) >= 1 Then
-        è²¸ä»˜é‡‘_è¨ˆ = å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1), å‡ºåŠ›_å¯¾è±¡å…ƒé‡‘åˆ—) ' æœ€çµ‚è¡Œã®å¯¾è±¡å…ƒé‡‘åˆ—ï¼ˆè²¸ä»˜é‡‘ï¼‰
+    If IsArray(o—Íƒf[ƒ^) And UBound(o—Íƒf[ƒ^, 1) >= 1 Then
+        ‘Ý•t‹à_Œv = o—Íƒf[ƒ^(UBound(o—Íƒf[ƒ^, 1), o—Í_‘ÎÛŒ³‹à—ñ) ' ÅIs‚Ì‘ÎÛŒ³‹à—ñi‘Ý•t‹àj
         
-        ' æ•°å¼ã®å ´åˆã¯ç®—å‡ºå€¤ã‚’å–å¾—
-        Dim åˆ©æ¯é‡‘é¡ã‚»ãƒ« As Range
-        Set åˆ©æ¯é‡‘é¡ã‚»ãƒ« = toolSheet.Cells(UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1) + å‡ºåŠ›é–‹å§‹è¡Œã‚ªãƒ•ã‚»ãƒƒãƒˆ, å‡ºåŠ›_åˆ©æ¯é‡‘é¡åˆ—) ' å‡ºåŠ›é–‹å§‹è¡Œã‚ªãƒ•ã‚»ãƒƒãƒˆåˆ†
-        If åˆ©æ¯é‡‘é¡ã‚»ãƒ«.HasFormula Then
-            ç´„å®šåˆ©æ¯é‡‘_è¨ˆ = åˆ©æ¯é‡‘é¡ã‚»ãƒ«.Value ' æ•°å¼ã®ç®—å‡ºå€¤ã‚’å–å¾—
+        ' ”Ž®‚Ìê‡‚ÍŽZo’l‚ðŽæ“¾
+        Dim —˜‘§‹àŠzƒZƒ‹ As Range
+        Set —˜‘§‹àŠzƒZƒ‹ = toolSheet.Cells(UBound(o—Íƒf[ƒ^, 1) + o—ÍŠJŽnsƒIƒtƒZƒbƒg, o—Í_—˜‘§‹àŠz—ñ) ' o—ÍŠJŽnsƒIƒtƒZƒbƒg•ª
+        If —˜‘§‹àŠzƒZƒ‹.HasFormula Then
+            –ñ’è—˜‘§‹à_Œv = —˜‘§‹àŠzƒZƒ‹.Value ' ”Ž®‚ÌŽZo’l‚ðŽæ“¾
         Else
-            ç´„å®šåˆ©æ¯é‡‘_è¨ˆ = å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1), å‡ºåŠ›_åˆ©æ¯é‡‘é¡åˆ—) ' æœ€çµ‚è¡Œã®åˆ©æ¯é‡‘é¡åˆ—ï¼ˆç´„å®šåˆ©æ¯é‡‘ï¼‰
+            –ñ’è—˜‘§‹à_Œv = o—Íƒf[ƒ^(UBound(o—Íƒf[ƒ^, 1), o—Í_—˜‘§‹àŠz—ñ) ' ÅIs‚Ì—˜‘§‹àŠz—ñi–ñ’è—˜‘§‹àj
         End If
         
-        é…å»¶æå®³é‡‘_è¨ˆ = å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1), å‡ºåŠ›_é…å»¶æå®³é‡‘åˆ—) ' æœ€çµ‚è¡Œã®é…å»¶æå®³é‡‘åˆ—ï¼ˆé…å»¶æå®³é‡‘ï¼‰
+        ’x‰„‘¹ŠQ‹à_Œv = o—Íƒf[ƒ^(UBound(o—Íƒf[ƒ^, 1), o—Í_’x‰„‘¹ŠQ‹à—ñ) ' ÅIs‚Ì’x‰„‘¹ŠQ‹à—ñi’x‰„‘¹ŠQ‹àj
     End If
     
-    ' åˆ©æ¯è¨ˆç®—æ›¸ç”¨ã®ç½®æ›ãƒ‡ãƒ¼ã‚¿ã‚’å®šç¾©
-    ' å¿…è¦ã«å¿œã˜ã¦ç½®æ›ãƒšã‚¢ã‚’è¿½åŠ ãƒ»ä¿®æ­£ã—ã¦ãã ã•ã„
-    Dim ç½®æ›ãƒšã‚¢é…åˆ— As Variant
-    ç½®æ›ãƒšã‚¢é…åˆ— = Array( _
-        "{{é¡§å®¢ç•ªå·}}", é¡§å®¢ç•ªå·å–å¾—(toolSheet), _
-        "{{æ‰‹ç¶šç†ç”±}}", æ‰‹ç¶šç†ç”±å–å¾—(toolSheet), _
-        "{{æ‰‹ç¶šé–‹å§‹æ—¥}}", Format(æ‰‹ç¶šé–‹å§‹æ—¥å–å¾—(toolSheet), "yyyyå¹´mmæœˆddæ—¥"), _
-        "{{åˆå›žå€Ÿå…¥æ—¥}}", Format(åˆå›žå€Ÿå…¥æ—¥å–å¾—(toolSheet), "yyyyå¹´mmæœˆddæ—¥"), _
-        "{{å¥‘ç´„æœŸé™æ—¥}}", Format(å¥‘ç´„æœŸé™æ—¥å–å¾—(toolSheet), "yyyyå¹´mmæœˆddæ—¥"), _
-        "{{ä½œæˆæ—¥}}", Format(Now, "yyyyå¹´mmæœˆddæ—¥"), _
-        "{{å€Ÿå…¥é™åº¦é¡}}", Format(å€Ÿå…¥é™åº¦é¡å–å¾—(toolSheet), "#,##0"), _
-        "{{ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹}}", ãƒ­ãƒ¼ãƒ³å£åº§ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹å–å¾—(toolSheet), _
-        "{{æœŸå¤±æ—¥}}", Format(æœŸå¤±æ—¥å–å¾—(toolSheet), "yyyyå¹´mmæœˆddæ—¥"), _
-        "{{æœŸå¤±ç†ç”±}}", æœŸå¤±ç†ç”±å–å¾—(toolSheet), _
-        "{{è²¸ä»˜é‡‘_è¨ˆ}}", Format(è²¸ä»˜é‡‘_è¨ˆ, "#,##0"), _
-        "{{ç´„å®šåˆ©æ¯é‡‘_è¨ˆ}}", Format(ç´„å®šåˆ©æ¯é‡‘_è¨ˆ, "#,##0"), _
-        "{{é…å»¶æå®³é‡‘_è¨ˆ}}", Format(é…å»¶æå®³é‡‘_è¨ˆ, "#,##0"), _
-        "{{åˆ©æ¯å†…å®¹}}", åˆ©æ¯å†…å®¹ç”Ÿæˆ(toolSheet), _
-        "{{é…å»¶æå®³é‡‘å†…å®¹}}", é…å»¶æå®³é‡‘å†…å®¹ç”Ÿæˆ(toolSheet) _
+    ' —˜‘§ŒvŽZ‘—p‚Ì’uŠ·ƒf[ƒ^‚ð’è‹`
+    ' •K—v‚É‰ž‚¶‚Ä’uŠ·ƒyƒA‚ð’Ç‰ÁEC³‚µ‚Ä‚­‚¾‚³‚¢
+    Dim ’uŠ·ƒyƒA”z—ñ As Variant
+    ’uŠ·ƒyƒA”z—ñ = Array( _
+        "{{ŒÚ‹q”Ô†}}", ŒÚ‹q”Ô†Žæ“¾(toolSheet), _
+        "{{Žè‘±——R}}", Žè‘±——RŽæ“¾(toolSheet), _
+        "{{Žè‘±ŠJŽn“ú}}", Format(Žè‘±ŠJŽn“úŽæ“¾(toolSheet), "yyyy”NmmŒŽdd“ú"), _
+        "{{‰‰ñŽØ“ü“ú}}", Format(‰‰ñŽØ“ü“úŽæ“¾(toolSheet), "yyyy”NmmŒŽdd“ú"), _
+        "{{Œ_–ñŠúŒÀ“ú}}", Format(Œ_–ñŠúŒÀ“úŽæ“¾(toolSheet), "yyyy”NmmŒŽdd“ú"), _
+        "{{ì¬“ú}}", Format(Now, "yyyy”NmmŒŽdd“ú"), _
+        "{{ŽØ“üŒÀ“xŠz}}", Format(ŽØ“üŒÀ“xŠzŽæ“¾(toolSheet), "#,##0"), _
+        "{{ƒXƒe[ƒ^ƒX}}", ƒ[ƒ“ŒûÀƒXƒe[ƒ^ƒXŽæ“¾(toolSheet), _
+        "{{ŠúŽ¸“ú}}", Format(ŠúŽ¸“úŽæ“¾(toolSheet), "yyyy”NmmŒŽdd“ú"), _
+        "{{ŠúŽ¸——R}}", ŠúŽ¸——RŽæ“¾(toolSheet), _
+        "{{‘Ý•t‹à_Œv}}", Format(‘Ý•t‹à_Œv, "#,##0"), _
+        "{{–ñ’è—˜‘§‹à_Œv}}", Format(–ñ’è—˜‘§‹à_Œv, "#,##0"), _
+        "{{’x‰„‘¹ŠQ‹à_Œv}}", Format(’x‰„‘¹ŠQ‹à_Œv, "#,##0"), _
+        "{{—˜‘§“à—e}}", —˜‘§“à—e¶¬(toolSheet), _
+        "{{’x‰„‘¹ŠQ‹à“à—e}}", ’x‰„‘¹ŠQ‹à“à—e¶¬(toolSheet) _
     )
     
-    ' é…åˆ—ã®å„ãƒšã‚¢ã§ç½®æ›ã‚’å®Ÿè¡Œ
+    ' ”z—ñ‚ÌŠeƒyƒA‚Å’uŠ·‚ðŽÀs
     Dim i As Long
-    For i = LBound(ç½®æ›ãƒšã‚¢é…åˆ—) To UBound(ç½®æ›ãƒšã‚¢é…åˆ—) Step 2
-        If i + 1 <= UBound(ç½®æ›ãƒšã‚¢é…åˆ—) Then
-            Call ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc, CStr(ç½®æ›ãƒšã‚¢é…åˆ—(i)), CStr(ç½®æ›ãƒšã‚¢é…åˆ—(i + 1)))
+    For i = LBound(’uŠ·ƒyƒA”z—ñ) To UBound(’uŠ·ƒyƒA”z—ñ) Step 2
+        If i + 1 <= UBound(’uŠ·ƒyƒA”z—ñ) Then
+            Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, CStr(’uŠ·ƒyƒA”z—ñ(i)), CStr(’uŠ·ƒyƒA”z—ñ(i + 1)))
         End If
     Next i
 
-    Call åˆ©æ¯æ˜Žç´°ç”Ÿæˆ(wordDoc, toolSheet, å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿)
-
+    Call —˜‘§–¾×¶¬(wordDoc, toolSheet, o—Íƒf[ƒ^)
+    Call ’x‰„‘¹ŠQ‹à–¾×¶¬(wordDoc, toolSheet, o—Íƒf[ƒ^)
 
     Exit Sub
     
 ErrorHandler:
-    ' ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸå ´åˆã¯ç„¡è¦–ã—ã¦ç¶šè¡Œ
+    ' ƒGƒ‰[‚ª”­¶‚µ‚½ê‡‚Í–³Ž‹‚µ‚Ä‘±s
     Resume Next
 End Sub
 
-' å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰åˆ©æ¯æ˜Žç´°æ–‡å­—åˆ—ã‚’ç”Ÿæˆ
-Private Function åˆ©æ¯æ˜Žç´°ç”Ÿæˆ(wordDoc As Object, toolSheet As Worksheet, å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ As Variant) As String
-    Dim åˆ©æ¯æ˜Žç´°å†…å®¹ As String
-    Dim åˆ©æ¯æ˜Žç´°è£œè¶³ As String
+' o—Íƒf[ƒ^‚©‚ç—˜‘§–¾×•¶Žš—ñ‚ð¶¬
+Private Function —˜‘§–¾×¶¬(wordDoc As Object, toolSheet As Worksheet, o—Íƒf[ƒ^ As Variant) As String
+    Dim —˜‘§–¾×“à—e As String
+    Dim —˜‘§–¾×•â‘« As String
     Dim i As Long
-    Dim é †ç•ª As Long
-    Dim æœ€å¤§é †ç•ª As Long
-    Dim è¡¨ç¤ºç”¨é †ç•ª As Long
-    Dim é †ç•ªæ–‡å­— As String
+    Dim ‡”Ô As Long
+    Dim Å‘å‡”Ô As Long
+    Dim •\Ž¦—p‡”Ô As Long
+    Dim ‡”Ô•¶Žš As String
     
-    ' ãƒ‡ãƒ¼ã‚¿ãŒé…åˆ—ã‹ã¤è¦ç´ ãŒå­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
-    If Not IsArray(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿) Or UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1) < 1 Then
-        åˆ©æ¯æ˜Žç´°ç”Ÿæˆ = ""
+    ' ƒf[ƒ^‚ª”z—ñ‚©‚Â—v‘f‚ª‘¶Ý‚·‚é‚©ƒ`ƒFƒbƒN
+    If Not IsArray(o—Íƒf[ƒ^) Or UBound(o—Íƒf[ƒ^, 1) < 1 Then
+        —˜‘§–¾×¶¬ = ""
         Exit Function
     End If
     
-    åˆ©æ¯æ˜Žç´°å†…å®¹ = ""
-    é †ç•ª = 0
-    æœ€å¤§é †ç•ª = 0
-    è¡¨ç¤ºç”¨é †ç•ª = 0
+    —˜‘§–¾×“à—e = ""
+    ‡”Ô = 0
+    Å‘å‡”Ô = 0
+    •\Ž¦—p‡”Ô = 0
     
-    ' é †ç•ªæ•°å­—ã‚’æ ¼ç´ã™ã‚‹é…åˆ—ã‚’å®šç¾©
-    Dim é †ç•ªé…åˆ—() As Long
-    dim å†…å…¥ã‚Œé †ç•ªé…åˆ—() As Long
+    ' ‡”Ô”Žš‚ðŠi”[‚·‚é”z—ñ‚ð’è‹`
+    Dim ‡”Ô”z—ñ() As Long
+    dim “à“ü‚ê‡”Ô”z—ñ() As Long
     
-    ' æœ€å¤§é †ç•ªã‚’å–å¾—ï¼ˆåˆ©æ¯é‡‘é¡åˆ—ã«ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹ãƒ¬ã‚³ãƒ¼ãƒ‰ã®æ•°ï¼‰
-    For i = 1 To UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1)
-        If å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 12) <> "" And å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 12) <> 0 Then ' Låˆ—ï¼šåˆ©æ¯é‡‘é¡
-            æœ€å¤§é †ç•ª = æœ€å¤§é †ç•ª + 1
+    ' Å‘å‡”Ô‚ðŽæ“¾i—˜‘§‹àŠz—ñ‚Æ—˜‘§_•ÔÏŠz—ñ‚Éƒf[ƒ^‚ª‚ ‚éƒŒƒR[ƒh‚Ì”j
+    For i = 1 To UBound(o—Íƒf[ƒ^, 1)
+        If (o—Íƒf[ƒ^(i, o—Í_—˜‘§‹àŠz—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_—˜‘§‹àŠz—ñ) <> 0) Or _
+           (o—Íƒf[ƒ^(i, o—Í_—˜‘§_•ÔÏŠz—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_—˜‘§_•ÔÏŠz—ñ) <> 0) Then
+            Å‘å‡”Ô = Å‘å‡”Ô + 1
         End If
     Next i
     
-    ' é †ç•ªé…åˆ—ã®ã‚µã‚¤ã‚ºã‚’è¨­å®š
-    If æœ€å¤§é †ç•ª > 0 Then
-        ReDim é †ç•ªé…åˆ—(1 To æœ€å¤§é †ç•ª)
-        ReDim å†…å…¥ã‚Œé †ç•ªé…åˆ—(1 To æœ€å¤§é †ç•ª)
+    ' ‡”Ô”z—ñ‚ÌƒTƒCƒY‚ðÝ’è
+    If Å‘å‡”Ô > 0 Then
+        ReDim ‡”Ô”z—ñ(1 To Å‘å‡”Ô)
+        ReDim “à“ü‚ê‡”Ô”z—ñ(1 To Å‘å‡”Ô)
     End If
     
-    ' å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦åˆ©æ¯æ˜Žç´°ã‚’ç”Ÿæˆ
-    For i = 1 To UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1) - 1 ' æœ€å¾Œã®è¡Œã¯åˆè¨ˆè¡Œãªã®ã§é™¤å¤–
-
-        ' åˆ©æ¯é‡‘é¡åˆ—ã«ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹å ´åˆ
-        If å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 12) <> "" And å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 12) <> 0 Then ' Låˆ—ï¼šåˆ©æ¯é‡‘é¡
-            é †ç•ª = é †ç•ª + 1
-            è¡¨ç¤ºç”¨é †ç•ª = è¡¨ç¤ºç”¨é †ç•ª + 1
-            é †ç•ªé…åˆ—(é †ç•ª) = è¡¨ç¤ºç”¨é †ç•ª
-            
-            ' é †ç•ªã‚’â‘ â‘¡â‘¢å½¢å¼ã«å¤‰æ›ï¼ˆå…±é€šé–¢æ•°ã‚’ä½¿ç”¨ï¼‰
-            é †ç•ªæ–‡å­— = é †ç•ªæ–‡å­—å¤‰æ›(è¡¨ç¤ºç”¨é †ç•ª)
-            
-            åˆ©æ¯æ˜Žç´°å†…å®¹ = é †ç•ªæ–‡å­— & Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 12), "#,##0") & "å††" & "^p" & _
-                        "è²¸ä»˜é‡‘" & Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 5), "#,##0") & "å††ã«å¯¾ã™ã‚‹" & _
-                        Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 6), "yyyyå¹´mmæœˆddæ—¥") & "ã‹ã‚‰" & _
-                        Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 8), "yyyyå¹´mmæœˆddæ—¥") & "ã¾ã§" & _
-                        å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 9) & "æ—¥é–“ã€å¹´" & Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 10) * 100, "0.0") & "%ã®å‰²åˆã«ã‚ˆã‚‹åˆ©æ¯" & "^p" & "{{åˆ©æ¯æ˜Žç´°" & CStr(è¡¨ç¤ºç”¨é †ç•ª + 1) & "}}"
-            Call ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc, "{{åˆ©æ¯æ˜Žç´°" & è¡¨ç¤ºç”¨é †ç•ª & "}}", åˆ©æ¯æ˜Žç´°å†…å®¹)
-        End If
+    ' o—Íƒf[ƒ^‚ðƒ‹[ƒv‚µ‚Ä—˜‘§–¾×‚ð¶¬
+    For i = 1 To UBound(o—Íƒf[ƒ^, 1) - 1 ' ÅŒã‚Ìs‚Í‡Œvs‚È‚Ì‚ÅœŠO
         
-        ' åˆ©æ¯è¿”æ¸ˆé¡åˆ—ã«ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹å ´åˆ
-        If å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 18) <> "" And å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 18) <> 0 Then ' Råˆ—ï¼šåˆ©æ¯_è¿”æ¸ˆé¡
-            è¡¨ç¤ºç”¨é †ç•ª = è¡¨ç¤ºç”¨é †ç•ª + 1
-            å†…å…¥ã‚Œé †ç•ªé…åˆ—(é †ç•ª) = è¡¨ç¤ºç”¨é †ç•ª
+        ' —˜‘§•ÔÏŠz—ñ‚Éƒf[ƒ^‚ª‚ ‚éê‡
+        If o—Íƒf[ƒ^(i, o—Í_—˜‘§_•ÔÏŠz—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_—˜‘§_•ÔÏŠz—ñ) <> 0 Then ' R—ñF—˜‘§_•ÔÏŠz
+            •\Ž¦—p‡”Ô = •\Ž¦—p‡”Ô + 1
+            “à“ü‚ê‡”Ô”z—ñ(‡”Ô) = •\Ž¦—p‡”Ô
             
-            ' é †ç•ªã‚’â‘ â‘¡â‘¢å½¢å¼ã«å¤‰æ›ï¼ˆå…±é€šé–¢æ•°ã‚’ä½¿ç”¨ï¼‰
-            é †ç•ªæ–‡å­— = é †ç•ªæ–‡å­—å¤‰æ›(è¡¨ç¤ºç”¨é †ç•ª)
+            ' ‡”Ô‚ð‡@‡A‡BŒ`Ž®‚É•ÏŠ·i‹¤’ÊŠÖ”‚ðŽg—pj
+            ‡”Ô•¶Žš = ‡”Ô•¶Žš•ÏŠ·(•\Ž¦—p‡”Ô)
             
-            åˆ©æ¯æ˜Žç´°å†…å®¹ = é †ç•ªæ–‡å­— & "â–²" & Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 18), "#,##0") & "å††" & "^p" & _
-                        Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 16), "yyyyå¹´mmæœˆddæ—¥") & "ã«ä¸Šè¨˜" & é †ç•ªé…åˆ—ç¯„å›²å¤‰æ›(é †ç•ªé…åˆ—) & "åˆ©æ¯ã®ä¸€éƒ¨ã¨ã—ã¦å†…å…¥ã‚Œæ¸ˆã¿" & "^p" & "{{åˆ©æ¯æ˜Žç´°" & CStr(è¡¨ç¤ºç”¨é †ç•ª + 1) & "}}"
-            Call ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc, "{{åˆ©æ¯æ˜Žç´°" & è¡¨ç¤ºç”¨é †ç•ª & "}}", åˆ©æ¯æ˜Žç´°å†…å®¹)
+            —˜‘§–¾×“à—e = ‡”Ô•¶Žš & "£" & Format(o—Íƒf[ƒ^(i, o—Í_—˜‘§_•ÔÏŠz—ñ), "#,##0") & "‰~" & "^p" & _
+                        Format(o—Íƒf[ƒ^(i, o—Í_•ÔÏ“ú—ñ), "yyyy”NmmŒŽdd“ú") & "‚Éã‹L" & ‡”Ô”z—ñ”ÍˆÍ•ÏŠ·(‡”Ô”z—ñ) & "—˜‘§‚Ìˆê•”‚Æ‚µ‚Ä“à“ü•ÔÏ" & "^p" & "{{—˜‘§–¾×" & CStr(•\Ž¦—p‡”Ô + 1) & "}}"
+            Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, "{{—˜‘§–¾×" & •\Ž¦—p‡”Ô & "}}", —˜‘§–¾×“à—e)
+        End If
+
+        ' —˜‘§‹àŠz—ñ‚Éƒf[ƒ^‚ª‚ ‚éê‡
+        If o—Íƒf[ƒ^(i, o—Í_—˜‘§‹àŠz—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_—˜‘§‹àŠz—ñ) <> 0 Then ' L—ñF—˜‘§‹àŠz
+            ‡”Ô = ‡”Ô + 1
+            •\Ž¦—p‡”Ô = •\Ž¦—p‡”Ô + 1
+            ‡”Ô”z—ñ(‡”Ô) = •\Ž¦—p‡”Ô
+            
+            ' ‡”Ô‚ð‡@‡A‡BŒ`Ž®‚É•ÏŠ·i‹¤’ÊŠÖ”‚ðŽg—pj
+            ‡”Ô•¶Žš = ‡”Ô•¶Žš•ÏŠ·(•\Ž¦—p‡”Ô)
+            
+            —˜‘§–¾×“à—e = ‡”Ô•¶Žš & Format(o—Íƒf[ƒ^(i, o—Í_—˜‘§‹àŠz—ñ), "#,##0") & "‰~" & "^p" & _
+                        "‘Ý•t‹à" & Format(o—Íƒf[ƒ^(i, o—Í_‘ÎÛŒ³‹à—ñ), "#,##0") & "‰~‚É‘Î‚·‚é" & _
+                        Format(o—Íƒf[ƒ^(i, o—Í_ŒvŽZŠúŠÔŠJŽn“ú—ñ), "yyyy”NmmŒŽdd“ú") & "‚©‚ç" & _
+                        Format(o—Íƒf[ƒ^(i, o—Í_ŒvŽZŠúŠÔI—¹“ú—ñ), "yyyy”NmmŒŽdd“ú") & "‚Ü‚Å" & _
+                        o—Íƒf[ƒ^(i, o—Í_ŒvŽZ“ú”—ñ) & "“úŠÔA”N" & Format(o—Íƒf[ƒ^(i, o—Í_—˜—¦—ñ) * 100, "0.0") & "%‚ÌŠ„‡‚É‚æ‚é—˜‘§" & "^p" & "{{—˜‘§–¾×" & CStr(•\Ž¦—p‡”Ô + 1) & "}}"
+            Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, "{{—˜‘§–¾×" & •\Ž¦—p‡”Ô & "}}", —˜‘§–¾×“à—e)
         End If
     Next i
     
-    Call ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc, "{{åˆ©æ¯æ˜Žç´°" & CStr(è¡¨ç¤ºç”¨é †ç•ª + 1) & "}}", "")
+    Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, "{{—˜‘§–¾×" & CStr(•\Ž¦—p‡”Ô + 1) & "}}", "")
 
-    åˆ©æ¯æ˜Žç´°è£œè¶³ = é †ç•ªé…åˆ—ç¯„å›²å¤‰æ›(é †ç•ªé…åˆ—) & â€œã®åˆè¨ˆé‡‘é¡ã‚ˆã‚Šå†…å…¥ã‚Œâ€ & é †ç•ªé…åˆ—ç¯„å›²å¤‰æ›(å†…å…¥ã‚Œé †ç•ªé…åˆ—) & â€œã‚’æŽ§é™¤â€
-    Call ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc, "{{åˆ©æ¯æ˜Žç´°è£œè¶³}}", åˆ©æ¯æ˜Žç´°è£œè¶³)
+    Dim “à“ü‚ê”ÍˆÍ•¶Žš—ñ As String
+    “à“ü‚ê”ÍˆÍ•¶Žš—ñ = ‡”Ô”z—ñ”ÍˆÍ•ÏŠ·(“à“ü‚ê‡”Ô”z—ñ)
+    
+    If “à“ü‚ê”ÍˆÍ•¶Žš—ñ = "" Then
+        —˜‘§–¾×•â‘« = ‡”Ô”z—ñ”ÍˆÍ•ÏŠ·(‡”Ô”z—ñ) & "‚Ì‡Œv‹àŠz"
+    Else
+        —˜‘§–¾×•â‘« = ‡”Ô”z—ñ”ÍˆÍ•ÏŠ·(‡”Ô”z—ñ) & "‚Ì‡Œv‹àŠz‚æ‚è“à“ü" & “à“ü‚ê”ÍˆÍ•¶Žš—ñ & "‚ðTœ"
+    End If
+    Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, "{{—˜‘§–¾×•â‘«}}", —˜‘§–¾×•â‘«)
 
-    åˆ©æ¯æ˜Žç´°ç”Ÿæˆ = ""
+    —˜‘§–¾×¶¬ = ""
 End Function
 
-' åˆ©æ¯å†…å®¹ç”Ÿæˆé–¢æ•°
-' å€Ÿå…¥åˆ©çŽ‡å–å¾—ãƒ‡ãƒ¼ã‚¿ã®ãƒ¬ã‚³ãƒ¼ãƒ‰æ•°ã«å¿œã˜ã¦åˆ©æ¯å†…å®¹æ–‡å­—åˆ—ã‚’ç”Ÿæˆ
-Private Function åˆ©æ¯å†…å®¹ç”Ÿæˆ(toolSheet As Worksheet) As String
-    Dim å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿ As Variant
-    Dim åˆ©æ¯å†…å®¹ As String
+' —˜‘§“à—e¶¬ŠÖ”
+' ŽØ“ü—˜—¦Žæ“¾ƒf[ƒ^‚ÌƒŒƒR[ƒh”‚É‰ž‚¶‚Ä—˜‘§“à—e•¶Žš—ñ‚ð¶¬
+Private Function —˜‘§“à—e¶¬(toolSheet As Worksheet) As String
+    Dim ŽØ“ü—˜—¦ƒf[ƒ^ As Variant
+    Dim —˜‘§“à—e As String
     
-    ' å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
-    å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿ = å€Ÿå…¥åˆ©çŽ‡å–å¾—(toolSheet)
+    ' ŽØ“ü—˜—¦ƒf[ƒ^‚ðŽæ“¾
+    ŽØ“ü—˜—¦ƒf[ƒ^ = ŽØ“ü—˜—¦Žæ“¾(toolSheet)
     
-    ' ãƒ‡ãƒ¼ã‚¿ãŒé…åˆ—ã‹ã¤è¦ç´ ãŒå­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
-    If IsArray(å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿) And UBound(å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿, 1) >= 1 Then
-        If UBound(å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿, 1) = 1 Then
-            ' å˜ä¸€ãƒ¬ã‚³ãƒ¼ãƒ‰ã®å ´åˆ
-            åˆ©æ¯å†…å®¹ = "åˆ©æ¯å¹´" & Format(å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(1, 1) * 100, "0.0") & "%ã€"
+    ' ƒf[ƒ^‚ª”z—ñ‚©‚Â—v‘f‚ª‘¶Ý‚·‚é‚©ƒ`ƒFƒbƒN
+    If IsArray(ŽØ“ü—˜—¦ƒf[ƒ^) And UBound(ŽØ“ü—˜—¦ƒf[ƒ^, 1) >= 1 Then
+        If UBound(ŽØ“ü—˜—¦ƒf[ƒ^, 1) = 1 Then
+            ' ’PˆêƒŒƒR[ƒh‚Ìê‡
+            —˜‘§“à—e = "—˜‘§”N" & Format(ŽØ“ü—˜—¦ƒf[ƒ^(1, 1) * 100, "0.0") & "%"
         Else
-            ' è¤‡æ•°ãƒ¬ã‚³ãƒ¼ãƒ‰ã®å ´åˆ
-            åˆ©æ¯å†…å®¹ = "^p" & "åˆ©æ¯å¹´" & Format(å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(UBound(å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿, 1), 1) * 100, "0.0") & "%ï¼ˆ" & _
-                      Format(å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(2, 2), "yyyyå¹´mmæœˆddæ—¥") & "ä»¥å‰" & _
-                      Format(å€Ÿå…¥åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(1, 1) * 100, "0.0") & "%ï¼‰ã€"
+            ' •¡”ƒŒƒR[ƒh‚Ìê‡
+            —˜‘§“à—e = "^p" & "—˜‘§”N" & Format(ŽØ“ü—˜—¦ƒf[ƒ^(UBound(ŽØ“ü—˜—¦ƒf[ƒ^, 1), 1) * 100, "0.0") & "%i" & _
+                      Format(ŽØ“ü—˜—¦ƒf[ƒ^(2, 2), "yyyy”NmmŒŽdd“ú") & "ˆÈ‘O" & _
+                      Format(ŽØ“ü—˜—¦ƒf[ƒ^(1, 1) * 100, "0.0") & "%j"
         End If
     Else
-        ' ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã—ãªã„å ´åˆã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤
-        åˆ©æ¯å†…å®¹ = ""
+        ' ƒf[ƒ^‚ª‘¶Ý‚µ‚È‚¢ê‡‚ÌƒfƒtƒHƒ‹ƒg’l
+        —˜‘§“à—e = ""
     End If
     
-    åˆ©æ¯å†…å®¹ç”Ÿæˆ = åˆ©æ¯å†…å®¹
+    —˜‘§“à—e¶¬ = —˜‘§“à—e
 End Function
 
-' é…å»¶æå®³é‡‘å†…å®¹ç”Ÿæˆé–¢æ•°
-' é…å»¶æå®³é‡‘åˆ©çŽ‡å–å¾—ãƒ‡ãƒ¼ã‚¿ã®ãƒ¬ã‚³ãƒ¼ãƒ‰æ•°ã«å¿œã˜ã¦é…å»¶æå®³é‡‘å†…å®¹æ–‡å­—åˆ—ã‚’ç”Ÿæˆ
-Private Function é…å»¶æå®³é‡‘å†…å®¹ç”Ÿæˆ(toolSheet As Worksheet) As String
-    Dim é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿ As Variant
-    Dim é…å»¶æå®³é‡‘å†…å®¹ As String
+' ’x‰„‘¹ŠQ‹à“à—e¶¬ŠÖ”
+' ’x‰„‘¹ŠQ‹à—˜—¦Žæ“¾ƒf[ƒ^‚ÌƒŒƒR[ƒh”‚É‰ž‚¶‚Ä’x‰„‘¹ŠQ‹à“à—e•¶Žš—ñ‚ð¶¬
+Private Function ’x‰„‘¹ŠQ‹à“à—e¶¬(toolSheet As Worksheet) As String
+    Dim ’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^ As Variant
+    Dim ’x‰„‘¹ŠQ‹à“à—e As String
     
-    ' é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
-    é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿ = é…å»¶æå®³é‡‘åˆ©çŽ‡å–å¾—(toolSheet)
+    ' ’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^‚ðŽæ“¾
+    ’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^ = ’x‰„‘¹ŠQ‹à—˜—¦Žæ“¾(toolSheet)
     
-    ' ãƒ‡ãƒ¼ã‚¿ãŒé…åˆ—ã‹ã¤è¦ç´ ãŒå­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
-    If IsArray(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿) And UBound(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿, 1) >= 1 Then
-        If UBound(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿, 1) = 1 Then
-            ' å˜ä¸€ãƒ¬ã‚³ãƒ¼ãƒ‰ã®å ´åˆ
-            é…å»¶æå®³é‡‘å†…å®¹ = "é…å»¶æå®³é‡‘å¹´" & Format(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(1, 1) * 100, "0.0") & "%"
-        ElseIf UBound(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿, 1) = 2 Then
-            ' 2ãƒ¬ã‚³ãƒ¼ãƒ‰ã®å ´åˆ
-            é…å»¶æå®³é‡‘å†…å®¹ = "^p" & "é…å»¶æå®³é‡‘å¹´" & Format(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(UBound(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿, 1), 1) * 100, "0.0") & "%ï¼ˆ" & _
-                          Format(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(2, 2), "yyyyå¹´mmæœˆddæ—¥") & "ä»¥å‰" & _
-                          Format(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(1, 1) * 100, "0.0") & "%ï¼‰" & "^p"
-        ElseIf UBound(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿, 1) = 3 Then
-            ' 3ãƒ¬ã‚³ãƒ¼ãƒ‰ã®å ´åˆ
-            é…å»¶æå®³é‡‘å†…å®¹ = "^p" & "é…å»¶æå®³é‡‘å¹´" & Format(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(UBound(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿, 1), 1) * 100, "0.0") & "%ï¼ˆ" & _
-                          Format(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(2, 2), "yyyyå¹´mmæœˆddæ—¥") & "ä»¥å‰" & _
-                          Format(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(1, 1) * 100, "0.0") & "%ã€" & _
-                          Format(DateAdd("d", 1, é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(2, 2)), "yyyyå¹´mmæœˆddæ—¥") & "ï½ž" & _
-                          Format(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(3, 2), "yyyyå¹´mmæœˆddæ—¥") & _
-                          Format(é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿(2, 1) * 100, "0.0") & "%ï¼‰ã€" & "^p"
+    ' ƒf[ƒ^‚ª”z—ñ‚©‚Â—v‘f‚ª‘¶Ý‚·‚é‚©ƒ`ƒFƒbƒN
+    If IsArray(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^) And UBound(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^, 1) >= 1 Then
+        If UBound(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^, 1) = 1 Then
+            ' ’PˆêƒŒƒR[ƒh‚Ìê‡
+            ’x‰„‘¹ŠQ‹à“à—e = "’x‰„‘¹ŠQ‹à”N" & Format(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(1, 1) * 100, "0.0") & "%"
+
+        ElseIf UBound(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^, 1) = 2 Then
+            ' 2ƒŒƒR[ƒh‚Ìê‡
+            ’x‰„‘¹ŠQ‹à“à—e = "^p" & "’x‰„‘¹ŠQ‹à”N" & Format(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(UBound(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^, 1), 1) * 100, "0.0") & "%i" & _
+                          Format(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(2, 2), "yyyy”NmmŒŽdd“ú") & "ˆÈ‘O" & _
+                          Format(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(1, 1) * 100, "0.0") & "%j" & "^p"
+        ElseIf UBound(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^, 1) = 3 Then
+            ' 3ƒŒƒR[ƒh‚Ìê‡
+            ’x‰„‘¹ŠQ‹à“à—e = "^p" & "’x‰„‘¹ŠQ‹à”N" & Format(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(UBound(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^, 1), 1) * 100, "0.0") & "%i" & _
+                          Format(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(2, 2), "yyyy”NmmŒŽdd“ú") & "ˆÈ‘O" & _
+                          Format(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(1, 1) * 100, "0.0") & "%A" & _
+                          Format(DateAdd("d", 1, ’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(2, 2)), "yyyy”NmmŒŽdd“ú") & "`" & _
+                          Format(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(3, 2), "yyyy”NmmŒŽdd“ú") & _
+                          Format(’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^(2, 1) * 100, "0.0") & "%j" & "^p"
         Else
-            ' 3ãƒ¬ã‚³ãƒ¼ãƒ‰ä»¥ä¸Šã®å ´åˆã¯ã‚¨ãƒ©ãƒ¼ã¨ã™ã‚‹
-            Err.Raise 9999, "é…å»¶æå®³é‡‘å†…å®¹ç”Ÿæˆ", "é…å»¶æå®³é‡‘åˆ©çŽ‡ãƒ‡ãƒ¼ã‚¿ãŒ3ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚’è¶…ãˆã¦ã„ã¾ã™ã€‚æœ€å¤§3ãƒ¬ã‚³ãƒ¼ãƒ‰ã¾ã§ã—ã‹å¯¾å¿œã—ã¦ã„ã¾ã›ã‚“ã€‚"
+            ' 3ƒŒƒR[ƒhˆÈã‚Ìê‡‚ÍƒGƒ‰[‚Æ‚·‚é
+            Err.Raise 9999, "’x‰„‘¹ŠQ‹à“à—e¶¬", "’x‰„‘¹ŠQ‹à—˜—¦ƒf[ƒ^‚ª3ƒŒƒR[ƒh‚ð’´‚¦‚Ä‚¢‚Ü‚·BÅ‘å3ƒŒƒR[ƒh‚Ü‚Å‚µ‚©‘Î‰ž‚µ‚Ä‚¢‚Ü‚¹‚ñB"
         End If
     Else
-        ' ãƒ‡ãƒ¼ã‚¿ãŒå­˜åœ¨ã—ãªã„å ´åˆã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤
-        é…å»¶æå®³é‡‘å†…å®¹ = ""
+        ' ƒf[ƒ^‚ª‘¶Ý‚µ‚È‚¢ê‡‚ÌƒfƒtƒHƒ‹ƒg’l
+        ’x‰„‘¹ŠQ‹à“à—e = ""
     End If
     
-    é…å»¶æå®³é‡‘å†…å®¹ç”Ÿæˆ = é…å»¶æå®³é‡‘å†…å®¹
+    ’x‰„‘¹ŠQ‹à“à—e¶¬ = ’x‰„‘¹ŠQ‹à“à—e
 End Function
 
-' å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰é…å»¶æå®³é‡‘æ˜Žç´°æ–‡å­—åˆ—ã‚’ç”Ÿæˆ
-Private Function é…å»¶æå®³é‡‘æ˜Žç´°ç”Ÿæˆ(wordDoc As Object, toolSheet As Worksheet, å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ As Variant) As String
-    Dim é…å»¶æå®³é‡‘æ˜Žç´°å†…å®¹ As String
-    Dim é…å»¶æå®³é‡‘æ˜Žç´°è£œè¶³ As String
+' o—Íƒf[ƒ^‚©‚ç’x‰„‘¹ŠQ‹à–¾×•¶Žš—ñ‚ð¶¬
+Private Function ’x‰„‘¹ŠQ‹à–¾×¶¬(wordDoc As Object, toolSheet As Worksheet, o—Íƒf[ƒ^ As Variant) As String
+    Dim ’x‰„‘¹ŠQ‹à–¾×“à—e As String
+    Dim ’x‰„‘¹ŠQ‹à–¾×•â‘« As String
     Dim i As Long
-    Dim é †ç•ª As Long
-    Dim æœ€å¤§é †ç•ª As Long
-    Dim è¡¨ç¤ºç”¨é †ç•ª As Long
-    Dim é †ç•ªæ–‡å­— As String
+    Dim ‡”Ô As Long
+    Dim Å‘å‡”Ô As Long
+    Dim •\Ž¦—p‡”Ô As Long
+    Dim ‡”Ô•¶Žš As String
     
-    ' ãƒ‡ãƒ¼ã‚¿ãŒé…åˆ—ã‹ã¤è¦ç´ ãŒå­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
-    If Not IsArray(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿) Or UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1) < 1 Then
-        é…å»¶æå®³é‡‘æ˜Žç´°ç”Ÿæˆ = ""
+    ' ƒf[ƒ^‚ª”z—ñ‚©‚Â—v‘f‚ª‘¶Ý‚·‚é‚©ƒ`ƒFƒbƒN
+    If Not IsArray(o—Íƒf[ƒ^) Or UBound(o—Íƒf[ƒ^, 1) < 1 Then
+        ’x‰„‘¹ŠQ‹à–¾×¶¬ = ""
         Exit Function
     End If
     
-    é…å»¶æå®³é‡‘æ˜Žç´°å†…å®¹ = ""
-    é †ç•ª = 0
-    æœ€å¤§é †ç•ª = 0
+    ’x‰„‘¹ŠQ‹à–¾×“à—e = ""
+    ‡”Ô = 0
+    Å‘å‡”Ô = 0
     
-    ' Låˆ—ï¼ˆåˆ©æ¯é‡‘é¡ï¼‰ã¨Råˆ—ï¼ˆåˆ©æ¯_è¿”æ¸ˆé¡ï¼‰ã«æ•°å€¤ãŒã‚ã‚‹ä»¶æ•°ã‚’åˆæœŸå€¤ã¨ã—ã¦è¨­å®š
-    è¡¨ç¤ºç”¨é †ç•ª = 0
-    For i = 1 To UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1) - 1 ' æœ€å¾Œã®è¡Œã¯åˆè¨ˆè¡Œãªã®ã§é™¤å¤–
-        If å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 12) <> "" And å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 12) <> 0 Then ' Låˆ—ï¼šåˆ©æ¯é‡‘é¡
-            è¡¨ç¤ºç”¨é †ç•ª = è¡¨ç¤ºç”¨é †ç•ª + 1
-        End If
-        If å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 18) <> "" And å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 18) <> 0 Then ' Råˆ—ï¼šåˆ©æ¯_è¿”æ¸ˆé¡
-            è¡¨ç¤ºç”¨é †ç•ª = è¡¨ç¤ºç”¨é †ç•ª + 1
+    ' Å‘å‡”Ô‚ðŽæ“¾i’x‰„‘¹ŠQ‹à—ñ‚Æ’x‘¹‹à_•ÔÏŠz—ñ‚Éƒf[ƒ^‚ª‚ ‚éƒŒƒR[ƒh‚Ì”j
+    For i = 1 To UBound(o—Íƒf[ƒ^, 1)
+        If (o—Íƒf[ƒ^(i, o—Í_’x‰„‘¹ŠQ‹à—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_’x‰„‘¹ŠQ‹à—ñ) <> 0) Or _
+           (o—Íƒf[ƒ^(i, o—Í_’x‘¹‹à_•ÔÏŠz—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_’x‘¹‹à_•ÔÏŠz—ñ) <> 0) Then
+            Å‘å‡”Ô = Å‘å‡”Ô + 1
         End If
     Next i
     
-    ' é †ç•ªæ•°å­—ã‚’æ ¼ç´ã™ã‚‹é…åˆ—ã‚’å®šç¾©
-    Dim é †ç•ªé…åˆ—() As Long
-    Dim å†…å…¥ã‚Œé †ç•ªé…åˆ—() As Long
-    
-    ' æœ€å¤§é †ç•ªã‚’å–å¾—ï¼ˆé…å»¶æå®³é‡‘åˆ—ã«ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹ãƒ¬ã‚³ãƒ¼ãƒ‰ã®æ•°ï¼‰
-    For i = 1 To UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1)
-        If å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 13) <> "" And å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 13) <> 0 Then ' Måˆ—ï¼šé…å»¶æå®³é‡‘
-            æœ€å¤§é †ç•ª = æœ€å¤§é †ç•ª + 1
-        End If
-    Next i
-    
-    ' é †ç•ªé…åˆ—ã®ã‚µã‚¤ã‚ºã‚’è¨­å®š
-    If æœ€å¤§é †ç•ª > 0 Then
-        ReDim é †ç•ªé…åˆ—(1 To æœ€å¤§é †ç•ª)
-        ReDim å†…å…¥ã‚Œé †ç•ªé…åˆ—(1 To æœ€å¤§é †ç•ª)
-    End If
-    
-    ' å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦é…å»¶æå®³é‡‘æ˜Žç´°ã‚’ç”Ÿæˆ
-    For i = 1 To UBound(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿, 1) - 1 ' æœ€å¾Œã®è¡Œã¯åˆè¨ˆè¡Œãªã®ã§é™¤å¤–
+    ' ‡”Ô”Žš‚ðŠi”[‚·‚é”z—ñ‚ð’è‹`
+    Dim ‡”Ô”z—ñ() As Long
+    Dim “à“ü‚ê‡”Ô”z—ñ() As Long
 
-        ' é…å»¶æå®³é‡‘åˆ—ã«ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹å ´åˆ
-        If å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 13) <> "" And å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 13) <> 0 Then ' Måˆ—ï¼šé…å»¶æå®³é‡‘
-            é †ç•ª = é †ç•ª + 1
-            è¡¨ç¤ºç”¨é †ç•ª = è¡¨ç¤ºç”¨é †ç•ª + 1
-            é †ç•ªé…åˆ—(é †ç•ª) = è¡¨ç¤ºç”¨é †ç•ª
+    ' ‡”Ô”z—ñ‚ÌƒTƒCƒY‚ðÝ’è
+    If Å‘å‡”Ô > 0 Then
+        ReDim ‡”Ô”z—ñ(1 To Å‘å‡”Ô)
+        ReDim “à“ü‚ê‡”Ô”z—ñ(1 To Å‘å‡”Ô)
+    End If
+
+    ' L—ñi—˜‘§‹àŠzj‚ÆR—ñi—˜‘§_•ÔÏŠzj‚É”’l‚ª‚ ‚éŒ”‚ð‰Šú’l‚Æ‚µ‚ÄÝ’è
+    •\Ž¦—p‡”Ô = 0
+    For i = 1 To UBound(o—Íƒf[ƒ^, 1) - 1 ' ÅŒã‚Ìs‚Í‡Œvs‚È‚Ì‚ÅœŠO
+        If o—Íƒf[ƒ^(i, o—Í_—˜‘§‹àŠz—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_—˜‘§‹àŠz—ñ) <> 0 Then ' L—ñF—˜‘§‹àŠz
+            •\Ž¦—p‡”Ô = •\Ž¦—p‡”Ô + 1
+        End If
+        If o—Íƒf[ƒ^(i, o—Í_—˜‘§_•ÔÏŠz—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_—˜‘§_•ÔÏŠz—ñ) <> 0 Then ' R—ñF—˜‘§_•ÔÏŠz
+            •\Ž¦—p‡”Ô = •\Ž¦—p‡”Ô + 1
+        End If
+    Next i
+
+    Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, "{{’x‰„‘¹ŠQ‹à–¾×1}}", "{{’x‰„‘¹ŠQ‹à–¾×" & (•\Ž¦—p‡”Ô + 1) & "}}")
+
+    
+    ' o—Íƒf[ƒ^‚ðƒ‹[ƒv‚µ‚Ä’x‰„‘¹ŠQ‹à–¾×‚ð¶¬
+    For i = 1 To UBound(o—Íƒf[ƒ^, 1) - 1 ' ÅŒã‚Ìs‚Í‡Œvs‚È‚Ì‚ÅœŠO
+
+        ' ’x‘¹‹à•ÔÏŠz—ñ‚Éƒf[ƒ^‚ª‚ ‚éê‡
+        If o—Íƒf[ƒ^(i, o—Í_’x‘¹‹à_•ÔÏŠz—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_’x‘¹‹à_•ÔÏŠz—ñ) <> 0 Then ' S—ñF’x‘¹‹à_•ÔÏŠz
+
+            •\Ž¦—p‡”Ô = •\Ž¦—p‡”Ô + 1
+            “à“ü‚ê‡”Ô”z—ñ(‡”Ô) = •\Ž¦—p‡”Ô
             
-            ' é †ç•ªã‚’â‘ â‘¡â‘¢å½¢å¼ã«å¤‰æ›ï¼ˆå…±é€šé–¢æ•°ã‚’ä½¿ç”¨ï¼‰
-            é †ç•ªæ–‡å­— = é †ç•ªæ–‡å­—å¤‰æ›(è¡¨ç¤ºç”¨é †ç•ª)
+            ' ‡”Ô‚ð‡@‡A‡BŒ`Ž®‚É•ÏŠ·i‹¤’ÊŠÖ”‚ðŽg—pj
+            ‡”Ô•¶Žš = ‡”Ô•¶Žš•ÏŠ·(•\Ž¦—p‡”Ô)
             
-            é…å»¶æå®³é‡‘æ˜Žç´°å†…å®¹ = é †ç•ªæ–‡å­— & Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 13), "#,##0") & "å††" & "^p" & _
-                        "è²¸ä»˜é‡‘" & Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 5), "#,##0") & "å††ã«å¯¾ã™ã‚‹" & _
-                        Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 6), "yyyyå¹´mmæœˆddæ—¥") & "ã‹ã‚‰" & _
-                        Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 8), "yyyyå¹´mmæœˆddæ—¥") & "ã¾ã§" & _
-                        å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 9) & "æ—¥é–“ã€å¹´" & Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 10) * 100, "0.0") & "%ã®å‰²åˆã«ã‚ˆã‚‹é…å»¶æå®³é‡‘" & "^p" & "{{é…å»¶æå®³é‡‘æ˜Žç´°" & CStr(è¡¨ç¤ºç”¨é †ç•ª + 1) & "}}"
-            Call ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc, "{{é…å»¶æå®³é‡‘æ˜Žç´°" & è¡¨ç¤ºç”¨é †ç•ª & "}}", é…å»¶æå®³é‡‘æ˜Žç´°å†…å®¹)
+            ’x‰„‘¹ŠQ‹à–¾×“à—e = ‡”Ô•¶Žš & "£" & Format(o—Íƒf[ƒ^(i, o—Í_’x‘¹‹à_•ÔÏŠz—ñ), "#,##0") & "‰~" & "^p" & _
+                        Format(o—Íƒf[ƒ^(i, o—Í_•ÔÏ“ú—ñ), "yyyy”NmmŒŽdd“ú") & "‚Éã‹L" & ‡”Ô”z—ñ”ÍˆÍ•ÏŠ·(‡”Ô”z—ñ) & "‚ÉŒW‚é’x‰„‘¹ŠQ‹à‚Ì‡Œv‚Æ‚µ‚Ä“à“ü•ÔÏ" & "^p" & "{{’x‰„‘¹ŠQ‹à–¾×" & CStr(•\Ž¦—p‡”Ô + 1) & "}}"
+            Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, "{{’x‰„‘¹ŠQ‹à–¾×" & •\Ž¦—p‡”Ô & "}}", ’x‰„‘¹ŠQ‹à–¾×“à—e)
+        End If
+
+        ' ’x‰„‘¹ŠQ‹à—ñ‚Éƒf[ƒ^‚ª‚ ‚éê‡
+        If o—Íƒf[ƒ^(i, o—Í_’x‰„‘¹ŠQ‹à—ñ) <> "" And o—Íƒf[ƒ^(i, o—Í_’x‰„‘¹ŠQ‹à—ñ) <> 0 And _
+          (o—Íƒf[ƒ^(i, o—Í_ƒXƒe[ƒ^ƒX—ñ) <> ŠúŽ¸—òŒãƒXƒe[ƒ^ƒX•¶Žš—ñ And o—Íƒf[ƒ^(i, o—Í_ƒXƒe[ƒ^ƒX—ñ) <> ŠúŒÀØ‚ê—òŒãƒXƒe[ƒ^ƒX•¶Žš—ñ) Then ' M—ñF’x‰„‘¹ŠQ‹à
+            ‡”Ô = ‡”Ô + 1
+            •\Ž¦—p‡”Ô = •\Ž¦—p‡”Ô + 1
+            ‡”Ô”z—ñ(‡”Ô) = •\Ž¦—p‡”Ô
+            
+            ' ‡”Ô‚ð‡@‡A‡BŒ`Ž®‚É•ÏŠ·i‹¤’ÊŠÖ”‚ðŽg—pj
+            ‡”Ô•¶Žš = ‡”Ô•¶Žš•ÏŠ·(•\Ž¦—p‡”Ô)
+            
+            If o—Íƒf[ƒ^(i, o—Í_—˜—¦—ñ) > 0 Then
+                ’x‰„‘¹ŠQ‹à–¾×“à—e = ‡”Ô•¶Žš & Format(o—Íƒf[ƒ^(i, o—Í_’x‰„‘¹ŠQ‹à—ñ), "#,##0") & "‰~" & "^p" & _
+                            "‘Ý•t‹à" & Format(o—Íƒf[ƒ^(i, o—Í_‘ÎÛŒ³‹à—ñ), "#,##0") & "‰~‚É‘Î‚·‚é" & _
+                            Format(o—Íƒf[ƒ^(i, o—Í_ŒvŽZŠúŠÔŠJŽn“ú—ñ), "yyyy”NmmŒŽdd“ú") & "‚©‚ç" & _
+                            Format(o—Íƒf[ƒ^(i, o—Í_ŒvŽZŠúŠÔI—¹“ú—ñ), "yyyy”NmmŒŽdd“ú") & "‚Ü‚Å" & _
+                            o—Íƒf[ƒ^(i, o—Í_ŒvŽZ“ú”—ñ) & "“úŠÔA”N" & Format(o—Íƒf[ƒ^(i, o—Í_—˜—¦—ñ) * 100, "0.0") & "%‚ÌŠ„‡‚É‚æ‚é’x‰„‘¹ŠQ‹à" & "^p" & "{{’x‰„‘¹ŠQ‹à–¾×" & CStr(•\Ž¦—p‡”Ô + 1) & "}}"
+            Else
+                ’x‰„‘¹ŠQ‹à–¾×“à—e = ‡”Ô•¶Žš & Format(o—Íƒf[ƒ^(i, o—Í_’x‰„‘¹ŠQ‹à—ñ), "#,##0") & "‰~" & "^p" & _
+                            "‘Ý•t‹à" & Format(o—Íƒf[ƒ^(i, o—Í_‘ÎÛŒ³‹à—ñ), "#,##0") & "‰~‚É‘Î‚·‚é" & _
+                            Format(o—Íƒf[ƒ^(i, o—Í_ŒvŽZŠúŠÔŠJŽn“ú—ñ), "yyyy”NmmŒŽdd“ú") & "‚©‚ç" & _
+                            Format(o—Íƒf[ƒ^(i, o—Í_ŒvŽZŠúŠÔI—¹“ú—ñ), "yyyy”NmmŒŽdd“ú") & "‚Ü‚Å" & _
+                            o—Íƒf[ƒ^(i, o—Í_ŒvŽZ“ú”—ñ) & "“úŠÔA’x‰„‘¹ŠQ‹à–Æœ" & "^p" & "{{’x‰„‘¹ŠQ‹à–¾×" & CStr(•\Ž¦—p‡”Ô + 1) & "}}"
+            END If
+
+            Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, "{{’x‰„‘¹ŠQ‹à–¾×" & •\Ž¦—p‡”Ô & "}}", ’x‰„‘¹ŠQ‹à–¾×“à—e)
+
         End If
         
-        ' é…æé‡‘è¿”æ¸ˆé¡åˆ—ã«ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹å ´åˆ
-        If å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 19) <> "" And å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 19) <> 0 Then ' Såˆ—ï¼šé…æé‡‘_è¿”æ¸ˆé¡
-            è¡¨ç¤ºç”¨é †ç•ª = è¡¨ç¤ºç”¨é †ç•ª + 1
-            å†…å…¥ã‚Œé †ç•ªé…åˆ—(é †ç•ª) = è¡¨ç¤ºç”¨é †ç•ª
-            
-            ' é †ç•ªã‚’â‘ â‘¡â‘¢å½¢å¼ã«å¤‰æ›ï¼ˆå…±é€šé–¢æ•°ã‚’ä½¿ç”¨ï¼‰
-            é †ç•ªæ–‡å­— = é †ç•ªæ–‡å­—å¤‰æ›(è¡¨ç¤ºç”¨é †ç•ª)
-            
-            é…å»¶æå®³é‡‘æ˜Žç´°å†…å®¹ = é †ç•ªæ–‡å­— & "â–²" & Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 19), "#,##0") & "å††" & "^p" & _
-                        Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 16), "yyyyå¹´mmæœˆddæ—¥") & "ã«ä¸Šè¨˜" & é †ç•ªé…åˆ—ç¯„å›²å¤‰æ›(é †ç•ªé…åˆ—) & "ã«ä¿‚ã‚‹é…å»¶æå®³é‡‘ã®åˆè¨ˆã¨ã—ã¦å†…å…¥ã‚Œæ¸ˆã¿" & "^p" & "{{é…å»¶æå®³é‡‘æ˜Žç´°" & CStr(è¡¨ç¤ºç”¨é †ç•ª + 1) & "}}"
-            Call ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc, "{{é…å»¶æå®³é‡‘æ˜Žç´°" & è¡¨ç¤ºç”¨é †ç•ª & "}}", é…å»¶æå®³é‡‘æ˜Žç´°å†…å®¹)
-        End If
     Next i
     
-    ' åŠ£å¾Œå‚µæ¨©
-    è¡¨ç¤ºç”¨é †ç•ª = è¡¨ç¤ºç”¨é †ç•ª + 1
+    if UBound(o—Íƒf[ƒ^, 1) > 2 Then
+        i = UBound(o—Íƒf[ƒ^, 1) - 1 
 
-    ' é †ç•ªã‚’â‘ â‘¡â‘¢å½¢å¼ã«å¤‰æ›ï¼ˆå…±é€šé–¢æ•°ã‚’ä½¿ç”¨ï¼‰
-    é †ç•ªæ–‡å­— = é †ç•ªæ–‡å­—å¤‰æ›(è¡¨ç¤ºç”¨é †ç•ª)    
+        if o—Íƒf[ƒ^(i, o—Í_ƒXƒe[ƒ^ƒX—ñ) = ŠúŽ¸—òŒãƒXƒe[ƒ^ƒX•¶Žš—ñ Or o—Íƒf[ƒ^(i, o—Í_ƒXƒe[ƒ^ƒX—ñ) = ŠúŒÀØ‚ê—òŒãƒXƒe[ƒ^ƒX•¶Žš—ñ Then
+
+            ' —òŒãÂŒ 
+            ‡”Ô = ‡”Ô + 1
+            •\Ž¦—p‡”Ô = •\Ž¦—p‡”Ô + 1
+            ‡”Ô”z—ñ(‡”Ô) = •\Ž¦—p‡”Ô
+
+            ' ‡”Ô‚ð‡@‡A‡BŒ`Ž®‚É•ÏŠ·i‹¤’ÊŠÖ”‚ðŽg—pj
+            ‡”Ô•¶Žš = ‡”Ô•¶Žš•ÏŠ·(•\Ž¦—p‡”Ô)    
+            
+            ’x‰„‘¹ŠQ‹à–¾×“à—e = ‡”Ô•¶Žš & "Šz–¢’èi—òŒãÂŒ j" & "^p" & _
+                        "‘Ý•t‹à" & Format(o—Íƒf[ƒ^(i, o—Í_‘ÎÛŒ³‹à—ñ), "#,##0") & "‰~‚É‘Î‚·‚é" & _
+                        Format(o—Íƒf[ƒ^(i, o—Í_ŒvŽZŠúŠÔŠJŽn“ú—ñ), "yyyy”NmmŒŽdd“ú") & "‚©‚ç" & "Š®Ï‚Ü‚Å" & _                
+                        h”N" & Format(o—Íƒf[ƒ^(i, o—Í_—˜—¦—ñ) * 100, "0.0") & "%‚ÌŠ„‡‚É‚æ‚é’x‰„‘¹ŠQ‹à" & "^p"
+            Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, "{{’x‰„‘¹ŠQ‹à–¾×" & •\Ž¦—p‡”Ô & "}}", ’x‰„‘¹ŠQ‹à–¾×“à—e)
+        End If
+    End If
+
     
-    é…å»¶æå®³é‡‘æ˜Žç´°å†…å®¹ = é †ç•ªæ–‡å­— & "é¡æœªå®šï¼ˆåŠ£å¾Œå‚µæ¨©ï¼‰" & "^p" & _
-                Format(å‡ºåŠ›ãƒ‡ãƒ¼ã‚¿(i, 16), "yyyyå¹´mmæœˆddæ—¥") & "ã«ä¸Šè¨˜" & é †ç•ªé…åˆ—ç¯„å›²å¤‰æ›(é †ç•ªé…åˆ—) & "ã«ä¿‚ã‚‹é…å»¶æå®³é‡‘ã®åˆè¨ˆã¨ã—ã¦å†…å…¥ã‚Œæ¸ˆã¿" & "^p" 
-    Call ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc, "{{é…å»¶æå®³é‡‘æ˜Žç´°" & CStr(è¡¨ç¤ºç”¨é †ç•ª + 1) & "}}", é…å»¶æå®³é‡‘æ˜Žç´°å†…å®¹)
+    Dim “à“ü‚ê”ÍˆÍ•¶Žš—ñ As String
+    “à“ü‚ê”ÍˆÍ•¶Žš—ñ = ‡”Ô”z—ñ”ÍˆÍ•ÏŠ·(“à“ü‚ê‡”Ô”z—ñ)
+    
+    If “à“ü‚ê”ÍˆÍ•¶Žš—ñ = "" Then
+        ’x‰„‘¹ŠQ‹à–¾×•â‘« = ‡”Ô”z—ñ”ÍˆÍ•ÏŠ·(‡”Ô”z—ñ) & "‚Ì‡Œv‹àŠz"
+    Else
+        ’x‰„‘¹ŠQ‹à–¾×•â‘« = ‡”Ô”z—ñ”ÍˆÍ•ÏŠ·(‡”Ô”z—ñ) & "‚Ì‡Œv‹àŠz‚æ‚è“à“ü" & “à“ü‚ê”ÍˆÍ•¶Žš—ñ & "‚ðTœ"
+    End If
+    Call ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc, "{{’x‰„‘¹ŠQ‹à–¾×•â‘«}}", ’x‰„‘¹ŠQ‹à–¾×•â‘«)
 
-    é…å»¶æå®³é‡‘æ˜Žç´°è£œè¶³ = é †ç•ªé…åˆ—ç¯„å›²å¤‰æ›(é †ç•ªé…åˆ—) & "ã®åˆè¨ˆé‡‘é¡ã‚ˆã‚Šå†…å…¥ã‚Œ" & é †ç•ªé…åˆ—ç¯„å›²å¤‰æ›(å†…å…¥ã‚Œé †ç•ªé…åˆ—) & "ã‚’æŽ§é™¤"
-    Call ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc, "{{é…å»¶æå®³é‡‘æ˜Žç´°è£œè¶³}}", é…å»¶æå®³é‡‘æ˜Žç´°è£œè¶³)
-
-    é…å»¶æå®³é‡‘æ˜Žç´°ç”Ÿæˆ = ""
+    ’x‰„‘¹ŠQ‹à–¾×¶¬ = ""
 End Function
 
-' Wordæ–‡å­—åˆ—ç½®æ›ã‚µãƒ–ãƒ«ãƒ¼ãƒãƒ³
-' å¼•æ•°: Wordãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã€æ¤œç´¢æ–‡å­—åˆ—ã€ç½®æ›æ–‡å­—åˆ—
-Private Sub ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc As Object, æ¤œç´¢æ–‡å­—åˆ— As String, ç½®æ›æ–‡å­—åˆ— As String)
+' Word•¶Žš—ñ’uŠ·ƒTƒuƒ‹[ƒ`ƒ“
+' ˆø”: WordƒhƒLƒ…ƒƒ“ƒgAŒŸõ•¶Žš—ñA’uŠ·•¶Žš—ñ
+Private Sub ƒ[ƒh•¶Žš—ñ’uŠ·(wordDoc As Object, ŒŸõ•¶Žš—ñ As String, ’uŠ·•¶Žš—ñ As String)
     On Error GoTo ErrorHandler
     
     With wordDoc.Content.Find
-        .Text = æ¤œç´¢æ–‡å­—åˆ—
-        .Replacement.Text = ç½®æ›æ–‡å­—åˆ—
+        .Text = ŒŸõ•¶Žš—ñ
+        .Replacement.Text = ’uŠ·•¶Žš—ñ
         .Forward = True
         .Wrap = 1 ' wdFindContinue
         .Format = False
@@ -471,97 +657,101 @@ Private Sub ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›(wordDoc As Object, æ¤œç´¢æ–‡å­—åˆ— As Strin
     Exit Sub
     
 ErrorHandler:
-    ' ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸå ´åˆã¯ç„¡è¦–ã—ã¦ç¶šè¡Œ
-    Err.Raise 9999, "ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›", "ãƒ¯ãƒ¼ãƒ‰æ–‡å­—åˆ—ç½®æ›ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚"
+    ' ƒGƒ‰[‚ª”­¶‚µ‚½ê‡‚Í–³Ž‹‚µ‚Ä‘±s
+    Err.Raise 9999, "ƒ[ƒh•¶Žš—ñ’uŠ·", "ƒ[ƒh•¶Žš—ñ’uŠ·‚ÅƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½B"
 End Sub
 
 
 
-' é †ç•ªæ–‡å­—å¤‰æ›å…±é€šé–¢æ•°
-' å¼•æ•°: é †ç•ªï¼ˆæ•°å€¤ï¼‰
-' æˆ»ã‚Šå€¤: â‘ â‘¡â‘¢å½¢å¼ã®æ–‡å­—åˆ—
-Public Function é †ç•ªæ–‡å­—å¤‰æ›(é †ç•ª As Long) As String
-    Dim é †ç•ªæ–‡å­— As String
-    Select Case é †ç•ª
-        Case 1: é †ç•ªæ–‡å­— = "â‘ "
-        Case 2: é †ç•ªæ–‡å­— = "â‘¡"
-        Case 3: é †ç•ªæ–‡å­— = "â‘¢"
-        Case 4: é †ç•ªæ–‡å­— = "â‘£"
-        Case 5: é †ç•ªæ–‡å­— = "â‘¤"
-        Case 6: é †ç•ªæ–‡å­— = "â‘¥"
-        Case 7: é †ç•ªæ–‡å­— = "â‘¦"
-        Case 8: é †ç•ªæ–‡å­— = "â‘§"
-        Case 9: é †ç•ªæ–‡å­— = "â‘¨"
-        Case 10: é †ç•ªæ–‡å­— = "â‘©"
-        Case 11: é †ç•ªæ–‡å­— = "â‘ª"
-        Case 12: é †ç•ªæ–‡å­— = "â‘«"
-        Case 13: é †ç•ªæ–‡å­— = "â‘¬"
-        Case 14: é †ç•ªæ–‡å­— = "â‘­"
-        Case 15: é †ç•ªæ–‡å­— = "â‘®"
-        Case 16: é †ç•ªæ–‡å­— = "â‘¯"
-        Case 17: é †ç•ªæ–‡å­— = "â‘°"
-        Case 18: é †ç•ªæ–‡å­— = "â‘±"
-        Case 19: é †ç•ªæ–‡å­— = "â‘²"
-        Case 20: é †ç•ªæ–‡å­— = "â‘³"
-        Case Else: é †ç•ªæ–‡å­— = "(" & é †ç•ª & ")"
+' ‡”Ô•¶Žš•ÏŠ·‹¤’ÊŠÖ”
+' ˆø”: ‡”Ôi”’lj
+' –ß‚è’l: ‡@‡A‡BŒ`Ž®‚Ì•¶Žš—ñ
+Public Function ‡”Ô•¶Žš•ÏŠ·(‡”Ô As Long) As String
+    Dim ‡”Ô•¶Žš As String
+    Select Case ‡”Ô
+        Case 1: ‡”Ô•¶Žš = "‡@"
+        Case 2: ‡”Ô•¶Žš = "‡A"
+        Case 3: ‡”Ô•¶Žš = "‡B"
+        Case 4: ‡”Ô•¶Žš = "‡C"
+        Case 5: ‡”Ô•¶Žš = "‡D"
+        Case 6: ‡”Ô•¶Žš = "‡E"
+        Case 7: ‡”Ô•¶Žš = "‡F"
+        Case 8: ‡”Ô•¶Žš = "‡G"
+        Case 9: ‡”Ô•¶Žš = "‡H"
+        Case 10: ‡”Ô•¶Žš = "‡I"
+        Case 11: ‡”Ô•¶Žš = "‡J"
+        Case 12: ‡”Ô•¶Žš = "‡K"
+        Case 13: ‡”Ô•¶Žš = "‡L"
+        Case 14: ‡”Ô•¶Žš = "‡M"
+        Case 15: ‡”Ô•¶Žš = "‡N"
+        Case 16: ‡”Ô•¶Žš = "‡O"
+        Case 17: ‡”Ô•¶Žš = "‡P"
+        Case 18: ‡”Ô•¶Žš = "‡Q"
+        Case 19: ‡”Ô•¶Žš = "‡R"
+        Case 20: ‡”Ô•¶Žš = "‡S"
+        Case 21 To 35
+            ‡”Ô•¶Žš = ChrW(&H3250 + (‡”Ô - 20))  ' i‚Q‚Pj = U+3251
+        Case 36 To 50
+            ‡”Ô•¶Žš = ChrW(&H32B0 + (‡”Ô - 35))  ' i‚R‚Uj = U+32B1
+        Case Else: ‡”Ô•¶Žš = "(" & ‡”Ô & ")"
     End Select
     
-    é †ç•ªæ–‡å­—å¤‰æ› = é †ç•ªæ–‡å­—
+    ‡”Ô•¶Žš•ÏŠ· = ‡”Ô•¶Žš
 End Function
 
 
-' é †ç•ªé…åˆ—ã‚’ç¯„å›²æ–‡å­—åˆ—ã«å¤‰æ›ã™ã‚‹å…±é€šé–¢æ•°
-' å¼•æ•°: é †ç•ªé…åˆ—ï¼ˆæ•°å€¤ã®é…åˆ—ï¼‰
-' æˆ»ã‚Šå€¤: â‘ ï½žâ‘¢ã€â‘¤ï½žâ‘¥ã€â‘§ å½¢å¼ã®æ–‡å­—åˆ—
-Public Function é †ç•ªé…åˆ—ç¯„å›²å¤‰æ›(é †ç•ªé…åˆ— As Variant) As String
-    ' é…åˆ—ã‹ã©ã†ã‹ã€ãŠã‚ˆã³æœ‰åŠ¹ãªç¯„å›²ã‚’æŒã£ã¦ã„ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯
-    If Not IsArray(é †ç•ªé…åˆ—) Or UBound(é †ç•ªé…åˆ—) < LBound(é †ç•ªé…åˆ—) Then
-        é †ç•ªé…åˆ—ç¯„å›²å¤‰æ› = ""
+' ‡”Ô”z—ñ‚ð”ÍˆÍ•¶Žš—ñ‚É•ÏŠ·‚·‚é‹¤’ÊŠÖ”
+' ˆø”: ‡”Ô”z—ñi”’l‚Ì”z—ñj
+' –ß‚è’l: ‡@`‡BA‡D`‡EA‡G Œ`Ž®‚Ì•¶Žš—ñ
+Public Function ‡”Ô”z—ñ”ÍˆÍ•ÏŠ·(‡”Ô”z—ñ As Variant) As String
+    ' ”z—ñ‚©‚Ç‚¤‚©A‚¨‚æ‚Ñ—LŒø‚È”ÍˆÍ‚ðŽ‚Á‚Ä‚¢‚é‚©‚ðƒ`ƒFƒbƒN
+    If Not IsArray(‡”Ô”z—ñ) Or UBound(‡”Ô”z—ñ) < LBound(‡”Ô”z—ñ) Then
+        ‡”Ô”z—ñ”ÍˆÍ•ÏŠ· = ""
         Exit Function
     End If
  
-    ' === ã‚¹ãƒ†ãƒƒãƒ—1: 0ã‚’é™¤å¤–ã—ãŸæ–°ã—ã„é…åˆ—ã‚’ä½œæˆ ===
-    Dim filteredArray() As Long  ' 0ä»¥å¤–ã®å€¤ã‚’æ ¼ç´ã™ã‚‹é…åˆ—
+    ' === ƒXƒeƒbƒv1: 0‚ðœŠO‚µ‚½V‚µ‚¢”z—ñ‚ðì¬ ===
+    Dim filteredArray() As Long  ' 0ˆÈŠO‚Ì’l‚ðŠi”[‚·‚é”z—ñ
     Dim i As Long, j As Long
-    Dim count As Long            ' 0ä»¥å¤–ã®è¦ç´ æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
+    Dim count As Long            ' 0ˆÈŠO‚Ì—v‘f”‚ðƒJƒEƒ“ƒg
 
-    ' 0ä»¥å¤–ã®è¦ç´ ã®å€‹æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
+    ' 0ˆÈŠO‚Ì—v‘f‚ÌŒÂ”‚ðƒJƒEƒ“ƒg
     count = 0
-    For i = LBound(é †ç•ªé…åˆ—) To UBound(é †ç•ªé…åˆ—)
-        ' å€¤ãŒæ•°å€¤ã§ã‚ã‚Šã€ã‹ã¤0ã§ãªã„å ´åˆã«ã‚«ã‚¦ãƒ³ãƒˆ
-        If IsNumeric(é †ç•ªé…åˆ—(i)) Then
-            If é †ç•ªé…åˆ—(i) <> 0 Then
+    For i = LBound(‡”Ô”z—ñ) To UBound(‡”Ô”z—ñ)
+        ' ’l‚ª”’l‚Å‚ ‚èA‚©‚Â0‚Å‚È‚¢ê‡‚ÉƒJƒEƒ“ƒg
+        If IsNumeric(‡”Ô”z—ñ(i)) Then
+            If ‡”Ô”z—ñ(i) <> 0 Then
                 count = count + 1
             End If
         End If
     Next i
 
-    ' æœ‰åŠ¹ãªãƒ‡ãƒ¼ã‚¿ãŒä¸€ã¤ã‚‚ãªã‘ã‚Œã°ã€ç©ºæ–‡å­—ã‚’è¿”ã—ã¦çµ‚äº†
+    ' —LŒø‚Èƒf[ƒ^‚ªˆê‚Â‚à‚È‚¯‚ê‚ÎA‹ó•¶Žš‚ð•Ô‚µ‚ÄI—¹
     If count = 0 Then
-        é †ç•ªé…åˆ—ç¯„å›²å¤‰æ› = ""
+        ‡”Ô”z—ñ”ÍˆÍ•ÏŠ· = ""
         Exit Function
     End If
 
-    ' filteredArray ã‚’å¿…è¦ãªã‚µã‚¤ã‚ºã«èª¿æ•´ï¼ˆ1å§‹ã¾ã‚Šï¼‰
+    ' filteredArray ‚ð•K—v‚ÈƒTƒCƒY‚É’²®i1Žn‚Ü‚èj
     ReDim filteredArray(1 To count)
 
-    ' å®Ÿéš›ã®å€¤ã‚’æ–°ã—ã„é…åˆ—ã«ã‚³ãƒ”ãƒ¼ï¼ˆ0ã¯ã‚¹ã‚­ãƒƒãƒ—ï¼‰
+    ' ŽÀÛ‚Ì’l‚ðV‚µ‚¢”z—ñ‚ÉƒRƒs[i0‚ÍƒXƒLƒbƒvj
     j = 1
-    For i = LBound(é †ç•ªé…åˆ—) To UBound(é †ç•ªé…åˆ—)
-        If IsNumeric(é †ç•ªé…åˆ—(i)) Then
-            If é †ç•ªé…åˆ—(i) <> 0 Then
-                filteredArray(j) = CLng(é †ç•ªé…åˆ—(i))  ' æ•°å€¤ã«å¤‰æ›ã—ã¦æ ¼ç´
+    For i = LBound(‡”Ô”z—ñ) To UBound(‡”Ô”z—ñ)
+        If IsNumeric(‡”Ô”z—ñ(i)) Then
+            If ‡”Ô”z—ñ(i) <> 0 Then
+                filteredArray(j) = CLng(‡”Ô”z—ñ(i))  ' ”’l‚É•ÏŠ·‚µ‚ÄŠi”[
                 j = j + 1
             End If
         End If
     Next i
 
-    ' === ã‚¹ãƒ†ãƒƒãƒ—2: æ–°ã—ã„é…åˆ—ã‚’æ˜‡é †ã«ã‚½ãƒ¼ãƒˆ ===
+    ' === ƒXƒeƒbƒv2: V‚µ‚¢”z—ñ‚ð¸‡‚Éƒ\[ƒg ===
     Dim temp As Long
     For i = 1 To UBound(filteredArray) - 1
         For j = i + 1 To UBound(filteredArray)
             If filteredArray(i) > filteredArray(j) Then
-                ' å€¤ã®å…¥ã‚Œæ›¿ãˆ
+                ' ’l‚Ì“ü‚ê‘Ö‚¦
                 temp = filteredArray(i)
                 filteredArray(i) = filteredArray(j)
                 filteredArray(j) = temp
@@ -569,53 +759,53 @@ Public Function é †ç•ªé…åˆ—ç¯„å›²å¤‰æ›(é †ç•ªé…åˆ— As Variant) As String
         Next j
     Next i
 
-    ' === ã‚¹ãƒ†ãƒƒãƒ—3: é€£ç¶šã™ã‚‹æ•°å­—ã‚’ç¯„å›²ã¨ã—ã¦ã¾ã¨ã‚ã‚‹ ===
-    Dim çµæžœæ–‡å­—åˆ— As String      ' æœ€çµ‚çš„ãªçµæžœæ–‡å­—åˆ—
-    Dim ç¯„å›²é–‹å§‹ As Long          ' ç¯„å›²ã®é–‹å§‹ç•ªå·
-    Dim ç¯„å›²çµ‚äº† As Long          ' ç¯„å›²ã®çµ‚äº†ç•ªå·
+    ' === ƒXƒeƒbƒv3: ˜A‘±‚·‚é”Žš‚ð”ÍˆÍ‚Æ‚µ‚Ä‚Ü‚Æ‚ß‚é ===
+    Dim Œ‹‰Ê•¶Žš—ñ As String      ' ÅI“I‚ÈŒ‹‰Ê•¶Žš—ñ
+    Dim ”ÍˆÍŠJŽn As Long          ' ”ÍˆÍ‚ÌŠJŽn”Ô†
+    Dim ”ÍˆÍI—¹ As Long          ' ”ÍˆÍ‚ÌI—¹”Ô†
 
-    çµæžœæ–‡å­—åˆ— = ""
-    ç¯„å›²é–‹å§‹ = filteredArray(1)   ' æœ€åˆã®å€¤ã‚’ç¯„å›²ã®é–‹å§‹ã¨ã™ã‚‹
-    ç¯„å›²çµ‚äº† = ç¯„å›²é–‹å§‹
+    Œ‹‰Ê•¶Žš—ñ = ""
+    ”ÍˆÍŠJŽn = filteredArray(1)   ' Å‰‚Ì’l‚ð”ÍˆÍ‚ÌŠJŽn‚Æ‚·‚é
+    ”ÍˆÍI—¹ = ”ÍˆÍŠJŽn
 
-    ' 2ç•ªç›®ä»¥é™ã®è¦ç´ ã‚’ãƒã‚§ãƒƒã‚¯
+    ' 2”Ô–ÚˆÈ~‚Ì—v‘f‚ðƒ`ƒFƒbƒN
     For i = 2 To UBound(filteredArray)
-        If filteredArray(i) = ç¯„å›²çµ‚äº† + 1 Then
-            ' æ•°å­—ãŒé€£ç¶šã—ã¦ã„ã‚‹å ´åˆï¼šç¯„å›²ã‚’æ‹¡å¼µ
-            ç¯„å›²çµ‚äº† = filteredArray(i)
+        If filteredArray(i) = ”ÍˆÍI—¹ + 1 Then
+            ' ”Žš‚ª˜A‘±‚µ‚Ä‚¢‚éê‡F”ÍˆÍ‚ðŠg’£
+            ”ÍˆÍI—¹ = filteredArray(i)
         Else
-            ' é€£ç¶šãŒé€”åˆ‡ã‚ŒãŸå ´åˆï¼šç¾åœ¨ã®ç¯„å›²ã‚’çµæžœã«è¿½åŠ 
-            If çµæžœæ–‡å­—åˆ— <> "" Then
-                çµæžœæ–‡å­—åˆ— = çµæžœæ–‡å­—åˆ— & "ã€"
+            ' ˜A‘±‚ª“rØ‚ê‚½ê‡FŒ»Ý‚Ì”ÍˆÍ‚ðŒ‹‰Ê‚É’Ç‰Á
+            If Œ‹‰Ê•¶Žš—ñ <> "" Then
+                Œ‹‰Ê•¶Žš—ñ = Œ‹‰Ê•¶Žš—ñ & "A"
             End If
 
-            If ç¯„å›²é–‹å§‹ = ç¯„å›²çµ‚äº† Then
-                ' å˜ä¸€ã®æ•°å­—ï¼ˆä¾‹ï¼šâ‘¢ï¼‰
-                çµæžœæ–‡å­—åˆ— = çµæžœæ–‡å­—åˆ— & é †ç•ªæ–‡å­—å¤‰æ›(ç¯„å›²é–‹å§‹)
+            If ”ÍˆÍŠJŽn = ”ÍˆÍI—¹ Then
+                ' ’Pˆê‚Ì”Žši—áF‡Bj
+                Œ‹‰Ê•¶Žš—ñ = Œ‹‰Ê•¶Žš—ñ & ‡”Ô•¶Žš•ÏŠ·(”ÍˆÍŠJŽn)
             Else
-                ' ç¯„å›²ï¼ˆä¾‹ï¼šâ‘¡ï½žâ‘¤ï¼‰
-                çµæžœæ–‡å­—åˆ— = çµæžœæ–‡å­—åˆ— & é †ç•ªæ–‡å­—å¤‰æ›(ç¯„å›²é–‹å§‹) & "ï½ž" & é †ç•ªæ–‡å­—å¤‰æ›(ç¯„å›²çµ‚äº†)
+                ' ”ÍˆÍi—áF‡A`‡Dj
+                Œ‹‰Ê•¶Žš—ñ = Œ‹‰Ê•¶Žš—ñ & ‡”Ô•¶Žš•ÏŠ·(”ÍˆÍŠJŽn) & "`" & ‡”Ô•¶Žš•ÏŠ·(”ÍˆÍI—¹)
             End If
 
-            ' æ–°ã—ã„ç¯„å›²ã®é–‹å§‹
-            ç¯„å›²é–‹å§‹ = filteredArray(i)
-            ç¯„å›²çµ‚äº† = ç¯„å›²é–‹å§‹
+            ' V‚µ‚¢”ÍˆÍ‚ÌŠJŽn
+            ”ÍˆÍŠJŽn = filteredArray(i)
+            ”ÍˆÍI—¹ = ”ÍˆÍŠJŽn
         End If
     Next i
 
-    ' æœ€å¾Œã®ç¯„å›²ã‚’çµæžœã«è¿½åŠ 
-    If çµæžœæ–‡å­—åˆ— <> "" Then
-        çµæžœæ–‡å­—åˆ— = çµæžœæ–‡å­—åˆ— & "ã€"
+    ' ÅŒã‚Ì”ÍˆÍ‚ðŒ‹‰Ê‚É’Ç‰Á
+    If Œ‹‰Ê•¶Žš—ñ <> "" Then
+        Œ‹‰Ê•¶Žš—ñ = Œ‹‰Ê•¶Žš—ñ & "A"
     End If
 
-    If ç¯„å›²é–‹å§‹ = ç¯„å›²çµ‚äº† Then
-        ' å˜ä¸€ã®æ•°å­—
-        çµæžœæ–‡å­—åˆ— = çµæžœæ–‡å­—åˆ— & é †ç•ªæ–‡å­—å¤‰æ›(ç¯„å›²é–‹å§‹)
+    If ”ÍˆÍŠJŽn = ”ÍˆÍI—¹ Then
+        ' ’Pˆê‚Ì”Žš
+        Œ‹‰Ê•¶Žš—ñ = Œ‹‰Ê•¶Žš—ñ & ‡”Ô•¶Žš•ÏŠ·(”ÍˆÍŠJŽn)
     Else
-        ' ç¯„å›²
-        çµæžœæ–‡å­—åˆ— = çµæžœæ–‡å­—åˆ— & é †ç•ªæ–‡å­—å¤‰æ›(ç¯„å›²é–‹å§‹) & "ï½ž" & é †ç•ªæ–‡å­—å¤‰æ›(ç¯„å›²çµ‚äº†)
+        ' ”ÍˆÍ
+        Œ‹‰Ê•¶Žš—ñ = Œ‹‰Ê•¶Žš—ñ & ‡”Ô•¶Žš•ÏŠ·(”ÍˆÍŠJŽn) & "`" & ‡”Ô•¶Žš•ÏŠ·(”ÍˆÍI—¹)
     End If
 
-    ' é–¢æ•°ã®æˆ»ã‚Šå€¤ã‚’è¨­å®š
-    é †ç•ªé…åˆ—ç¯„å›²å¤‰æ› = çµæžœæ–‡å­—åˆ—
+    ' ŠÖ”‚Ì–ß‚è’l‚ðÝ’è
+    ‡”Ô”z—ñ”ÍˆÍ•ÏŠ· = Œ‹‰Ê•¶Žš—ñ
 End Function
